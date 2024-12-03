@@ -2,6 +2,7 @@ package br.com.pet.conectaufc.service.cadeira;
 
 import br.com.pet.conectaufc.dto.cadeira.*;
 import br.com.pet.conectaufc.model.cadeira.Cadeira;
+import br.com.pet.conectaufc.model.material.Material;
 import br.com.pet.conectaufc.model.professor.Professor;
 import br.com.pet.conectaufc.repository.cadeira.CaderiaRepository;
 import br.com.pet.conectaufc.repository.material.MaterialRepository;
@@ -56,6 +57,7 @@ public class CadeiraService {
 
     public void deletaCadeira(Long id){
         cadeiraRepository.deleteById(id);
+        materialRepository.deletaTodoMaterialDaCadeira(id);
     }
 
     public CadeiraProfessorResponseDTO adicionaProfessorAUmaCadeira(CadeiraProfessorRequestDTO dto){

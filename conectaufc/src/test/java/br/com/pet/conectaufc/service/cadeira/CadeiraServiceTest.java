@@ -5,8 +5,10 @@ import br.com.pet.conectaufc.dto.cadeira.CadeiraRequestDTO;
 import br.com.pet.conectaufc.dto.cadeira.CadeiraResponseDTO;
 import br.com.pet.conectaufc.dto.cadeira.CadeiraUpdateDTO;
 import br.com.pet.conectaufc.model.cadeira.Cadeira;
+import br.com.pet.conectaufc.model.material.Material;
 import br.com.pet.conectaufc.model.professor.Professor;
 import br.com.pet.conectaufc.repository.cadeira.CaderiaRepository;
+import br.com.pet.conectaufc.repository.material.MaterialRepository;
 import br.com.pet.conectaufc.repository.professor.ProfessorRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -28,6 +30,9 @@ class CadeiraServiceTest {
 
     @Mock
     ProfessorRepository professorRepository;
+
+    @Mock
+    MaterialRepository materialRepository;
 
     @InjectMocks
     CadeiraService cadeiraService;
@@ -144,6 +149,31 @@ class CadeiraServiceTest {
 
         Assertions.assertThrows(IllegalArgumentException.class, () -> cadeiraService.removeProfessorDaCadeira(dtoArgumento));
 
+    }
+
+    @Test
+    @DisplayName("Apaga material da cadeira excluida")
+    void apagaMaterialCadeiraExcluida(){
+
+        Long id = 1L;
+        Cadeira cadeira = new Cadeira(new CadeiraRequestDTO("nome"));
+
+        Professor professor = new Professor();
+
+        Material material = new Material();
+
+        professor.addMaterialDeProfessor(material);
+
+        cadeira.addProfessorNaCadeira(professor);
+
+        when(caderiaRepository.getReferenceById(id)).thenReturn(cadeira);
+
+        cadeiraService.deletaCadeira(id);
+
+        //simulacao de que a query deu certo
+        professor.removeMaterial(material);
+
+        assertThat(professor.hasThisMaterial(material)).isFalse();
     }
 
 }

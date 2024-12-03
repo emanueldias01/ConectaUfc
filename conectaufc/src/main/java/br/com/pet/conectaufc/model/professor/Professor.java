@@ -29,7 +29,7 @@ public class Professor {
     @OneToMany(mappedBy = "professor", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Material> materiais = new ArrayList<>();
 
-    public Professor(){
+    public Professor() {
 
     }
 
@@ -48,4 +48,18 @@ public class Professor {
     public String getNome() {
         return nome;
     }
+
+    public void addMaterialDeProfessor(Material material) {
+        this.materiais.add(material);
+    }
+
+    public boolean hasThisMaterial(Material material) {
+        if (materiais.contains(material)) return true;
+        return false;
+    }
+
+    public void removeMaterial(Material material){
+        materiais.remove(material);
+    }
+
 }
