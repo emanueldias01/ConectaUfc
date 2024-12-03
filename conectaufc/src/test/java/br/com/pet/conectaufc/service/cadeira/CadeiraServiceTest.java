@@ -1,10 +1,13 @@
 package br.com.pet.conectaufc.service.cadeira;
 
+import br.com.pet.conectaufc.dto.cadeira.CadeiraProfessorRequestDTO;
 import br.com.pet.conectaufc.dto.cadeira.CadeiraRequestDTO;
 import br.com.pet.conectaufc.dto.cadeira.CadeiraResponseDTO;
 import br.com.pet.conectaufc.dto.cadeira.CadeiraUpdateDTO;
 import br.com.pet.conectaufc.model.cadeira.Cadeira;
+import br.com.pet.conectaufc.model.professor.Professor;
 import br.com.pet.conectaufc.repository.cadeira.CaderiaRepository;
+import br.com.pet.conectaufc.repository.professor.ProfessorRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -22,6 +25,9 @@ class CadeiraServiceTest {
 
     @Mock
     CaderiaRepository caderiaRepository;
+
+    @Mock
+    ProfessorRepository professorRepository;
 
     @InjectMocks
     CadeiraService cadeiraService;
@@ -79,6 +85,19 @@ class CadeiraServiceTest {
         when(caderiaRepository.findByNome(nomeAtualizado)).thenReturn(Optional.of(new Cadeira(new CadeiraRequestDTO(nomeAtualizado))));
 
         Assertions.assertThrows(IllegalArgumentException.class, () -> cadeiraService.atualizaNomeDaCadeira(dto));
+    }
+
+    @Test
+    @DisplayName("Deve adicionar um professor a uma cadeira")
+    void addProfessorEmUmaCadeira(){
+        CadeiraProfessorRequestDTO dtoArgumento = new CadeiraProfessorRequestDTO(1l, 1l);
+        Cadeira cadeiraRef = new Cadeira();
+        Professor professorRef = new Professor();
+
+        when(caderiaRepository.getReferenceById(dtoArgumento.idCadeira())).thenReturn(cadeiraRef);
+        when(professorRepository.getReferenceById(dtoArgumento.idProfessor())).thenReturn(professorRef);
+
+        assertThat(cadeiraService.adicionaProfessorAUmaCadeira(dtoArgumento).nomeProfessor()).isEqualTo(professorRef.getNome());
     }
 
 }

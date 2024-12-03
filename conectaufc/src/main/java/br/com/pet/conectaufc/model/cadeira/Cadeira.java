@@ -5,15 +5,12 @@ import br.com.pet.conectaufc.model.material.Material;
 import br.com.pet.conectaufc.model.professor.Professor;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
-
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Table(name = "tab_cadeira")
 @AllArgsConstructor
-@NoArgsConstructor
 public class Cadeira {
 
     @Id
@@ -27,6 +24,10 @@ public class Cadeira {
 
     @OneToMany(mappedBy = "cadeira", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Material> materiais = new ArrayList<>();
+
+    public Cadeira(){
+
+    }
 
     public Cadeira(CadeiraRequestDTO dto) {
         this.nome = dto.nome();
@@ -50,6 +51,10 @@ public class Cadeira {
 
     public void setNome(String nome) {
         this.nome = nome;
+    }
+
+    public void addProfessorNaCadeira(Professor professor){
+        professores.add(professor);
     }
 }
 

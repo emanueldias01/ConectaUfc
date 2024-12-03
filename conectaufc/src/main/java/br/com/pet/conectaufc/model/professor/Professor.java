@@ -4,15 +4,12 @@ import br.com.pet.conectaufc.model.cadeira.Cadeira;
 import br.com.pet.conectaufc.model.material.Material;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
-
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Table(name = "tab_professor")
 @AllArgsConstructor
-@NoArgsConstructor
 public class Professor {
 
     @Id
@@ -31,6 +28,10 @@ public class Professor {
 
     @OneToMany(mappedBy = "professor", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Material> materiais = new ArrayList<>();
+
+    public Professor(){
+
+    }
 
     public List<Cadeira> getCadeiras() {
         return cadeiras;
