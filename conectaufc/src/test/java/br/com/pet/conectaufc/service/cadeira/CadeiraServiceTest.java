@@ -100,4 +100,20 @@ class CadeiraServiceTest {
         assertThat(cadeiraService.adicionaProfessorAUmaCadeira(dtoArgumento).nomeProfessor()).isEqualTo(professorRef.getNome());
     }
 
+    @Test
+    @DisplayName("Nao cadastra professor na cadeira pois já está cadastrado")
+    void naoAddProfessorJaEstaCadastrado(){
+        CadeiraProfessorRequestDTO dtoArgumento = new CadeiraProfessorRequestDTO(1l, 1l);
+        Cadeira cadeiraRef = new Cadeira();
+        Professor professorRef = new Professor();
+
+        when(caderiaRepository.getReferenceById(dtoArgumento.idCadeira())).thenReturn(cadeiraRef);
+        when(professorRepository.getReferenceById(dtoArgumento.idProfessor())).thenReturn(professorRef);
+
+        cadeiraRef.addProfessorNaCadeira(professorRef);
+
+        Assertions.assertThrows(IllegalArgumentException.class, () -> cadeiraService.adicionaProfessorAUmaCadeira(dtoArgumento));
+
+    }
+
 }

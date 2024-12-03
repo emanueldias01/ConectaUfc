@@ -55,9 +55,13 @@ public class CadeiraService {
     }
 
     public CadeiraProfessorResponseDTO adicionaProfessorAUmaCadeira(CadeiraProfessorRequestDTO dto){
-        //verifica se o professor ja nao está na cadeira
         Cadeira cadeira = cadeiraRepository.getReferenceById(dto.idCadeira());
         Professor professor = professorRepository.getReferenceById(dto.idProfessor());
+
+        if(cadeira.getProfessores().contains(professor)){
+            throw new IllegalArgumentException("Esse professor já está cadastrado na cadeira");
+        }
+
         cadeira.addProfessorNaCadeira(professor);
 
         return new CadeiraProfessorResponseDTO(dto.idCadeira(), cadeira.getNome(), professor.getNome());
