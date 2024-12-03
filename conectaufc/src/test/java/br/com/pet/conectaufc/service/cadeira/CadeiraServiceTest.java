@@ -2,6 +2,7 @@ package br.com.pet.conectaufc.service.cadeira;
 
 import br.com.pet.conectaufc.dto.cadeira.CadeiraRequestDTO;
 import br.com.pet.conectaufc.dto.cadeira.CadeiraResponseDTO;
+import br.com.pet.conectaufc.dto.cadeira.CadeiraUpdateDTO;
 import br.com.pet.conectaufc.model.cadeira.Cadeira;
 import br.com.pet.conectaufc.repository.cadeira.CaderiaRepository;
 import org.junit.jupiter.api.Assertions;
@@ -50,6 +51,20 @@ class CadeiraServiceTest {
         when(caderiaRepository.findByNome(nomeRepetido)).thenReturn(Optional.of(cadeiraRepetida));
 
         Assertions.assertThrows(IllegalArgumentException.class, () -> cadeiraService.criaCadeira(dtoRef));
+    }
+
+    @Test
+    @DisplayName("Atualiza nome da cadeira")
+    void atualizaNomeDaCadeira(){
+        String nomeAtual = "nome";
+        String nomeAtualizado = "emon";
+
+        Cadeira cadeira = new Cadeira(new CadeiraRequestDTO(nomeAtual));
+        CadeiraUpdateDTO dto = new CadeiraUpdateDTO(1l, nomeAtualizado);
+
+        when(caderiaRepository.getReferenceById(dto.id())).thenReturn(cadeira);
+
+        assertThat(cadeiraService.atualizaNomeDaCadeira(dto).nome()).isEqualTo(nomeAtualizado);
     }
 
 }

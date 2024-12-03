@@ -47,5 +47,9 @@ public class Cadeira {
     public List<Professor> getProfessores() {
         return professores;
     }
+
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
 }
 

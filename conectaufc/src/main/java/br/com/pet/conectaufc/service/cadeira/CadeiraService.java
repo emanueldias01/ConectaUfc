@@ -2,6 +2,7 @@ package br.com.pet.conectaufc.service.cadeira;
 
 import br.com.pet.conectaufc.dto.cadeira.CadeiraRequestDTO;
 import br.com.pet.conectaufc.dto.cadeira.CadeiraResponseDTO;
+import br.com.pet.conectaufc.dto.cadeira.CadeiraUpdateDTO;
 import br.com.pet.conectaufc.model.cadeira.Cadeira;
 import br.com.pet.conectaufc.repository.cadeira.CaderiaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,5 +32,15 @@ public class CadeiraService {
         return repository.findAllByOrderByNomeAsc().stream().map(CadeiraResponseDTO::new).toList();
     }
 
+    public CadeiraResponseDTO atualizaNomeDaCadeira(CadeiraUpdateDTO dto){
+        //validar se já nao existe cadeira com o nome que quer atualizar
 
+        Cadeira cadeira = repository.getReferenceById(dto.id());
+
+        cadeira.setNome(dto.nome());
+
+        repository.save(cadeira);
+
+        return new CadeiraResponseDTO(cadeira);
+    }
 }
