@@ -16,7 +16,6 @@ import org.mockito.MockitoAnnotations;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
 class CadeiraServiceTest {
@@ -65,6 +64,21 @@ class CadeiraServiceTest {
         when(caderiaRepository.getReferenceById(dto.id())).thenReturn(cadeira);
 
         assertThat(cadeiraService.atualizaNomeDaCadeira(dto).nome()).isEqualTo(nomeAtualizado);
+    }
+
+    @Test
+    @DisplayName("Nao consegue atualizar nome devido a nome ja pertencer a uma cadeira")
+    void naoAtualizaNomeCadeiraNomeRepetido(){
+        String nomeAtual = "nome";
+        String nomeAtualizado = "emon";
+
+        Cadeira cadeira = new Cadeira(new CadeiraRequestDTO(nomeAtual));
+        CadeiraUpdateDTO dto = new CadeiraUpdateDTO(1l, nomeAtualizado);
+
+        when(caderiaRepository.getReferenceById(dto.id())).thenReturn(cadeira);
+        when(caderiaRepository.findByNome(nomeAtualizado)).thenReturn(Optional.of(new Cadeira(new CadeiraRequestDTO(nomeAtualizado))));
+
+        Assertions.assertThrows(IllegalArgumentException.class, () -> cadeiraService.atualizaNomeDaCadeira(dto));
     }
 
 }

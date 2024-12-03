@@ -33,7 +33,10 @@ public class CadeiraService {
     }
 
     public CadeiraResponseDTO atualizaNomeDaCadeira(CadeiraUpdateDTO dto){
-        //validar se já nao existe cadeira com o nome que quer atualizar
+
+        if (repository.findByNome(dto.nome()).isPresent()){
+            throw new IllegalArgumentException("Já existe uma cadeira com o nome que está tentando atualizar");
+        }
 
         Cadeira cadeira = repository.getReferenceById(dto.id());
 
