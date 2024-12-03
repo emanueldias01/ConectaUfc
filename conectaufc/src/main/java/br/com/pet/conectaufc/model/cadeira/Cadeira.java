@@ -5,7 +5,6 @@ import br.com.pet.conectaufc.model.material.Material;
 import br.com.pet.conectaufc.model.professor.Professor;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
@@ -15,7 +14,6 @@ import java.util.List;
 @Table(name = "tab_cadeira")
 @AllArgsConstructor
 @NoArgsConstructor
-@Getter
 public class Cadeira {
 
     @Id
@@ -32,6 +30,22 @@ public class Cadeira {
 
     public Cadeira(CadeiraRequestDTO dto) {
         this.nome = dto.nome();
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public List<Material> getMateriais() {
+        return materiais;
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public List<Professor> getProfessores() {
+        return professores;
     }
 }
 

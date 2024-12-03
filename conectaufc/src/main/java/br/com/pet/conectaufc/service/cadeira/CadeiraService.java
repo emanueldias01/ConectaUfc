@@ -26,7 +26,7 @@ public class CadeiraService {
     }
 
     public List<CadeiraResponseDTO> listaTodasAsCadeiras(){
-        return repository.findAll().stream().map(CadeiraResponseDTO::new).toList();
+        return repository.findAllByOrderByNomeAsc().stream().map(CadeiraResponseDTO::new).toList();
     }
 
 

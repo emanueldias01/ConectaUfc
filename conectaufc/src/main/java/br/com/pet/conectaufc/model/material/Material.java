@@ -4,14 +4,12 @@ import br.com.pet.conectaufc.model.cadeira.Cadeira;
 import br.com.pet.conectaufc.model.professor.Professor;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "tab_material")
 @AllArgsConstructor
 @NoArgsConstructor
-@Getter
 public class Material {
 
     @Id
@@ -27,6 +25,22 @@ public class Material {
     private Professor professor;
 
     private String link;
+
+    public Cadeira getCadeira() {
+        return cadeira;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public String getLink() {
+        return link;
+    }
+
+    public Professor getProfessor() {
+        return professor;
+    }
 }
 
 
