@@ -2,7 +2,9 @@ package br.com.pet.conectaufc.service.cadeira;
 
 import br.com.pet.conectaufc.dto.cadeira.CadeiraRequestDTO;
 import br.com.pet.conectaufc.dto.cadeira.CadeiraResponseDTO;
+import br.com.pet.conectaufc.model.cadeira.Cadeira;
 import br.com.pet.conectaufc.repository.cadeira.CaderiaRepository;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -10,8 +12,12 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import java.util.Optional;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.when;
+
 class CadeiraServiceTest {
 
     @Mock
@@ -32,6 +38,18 @@ class CadeiraServiceTest {
         CadeiraResponseDTO dtoResultado = new CadeiraResponseDTO(1L, "calculo");
 
         assertThat(cadeiraService.criaCadeira(dtoArgumento).nome()).isEqualTo(dtoResultado.nome());
+    }
+
+    @Test
+    @DisplayName("Nao cria cadeira por conta de nome já existente")
+    void naoCriaCadeiraNomeRepetido(){
+        String nomeRepetido = "calculo";
+        CadeiraRequestDTO dtoRef = new CadeiraRequestDTO(nomeRepetido);
+        Cadeira cadeiraRepetida = new Cadeira(dtoRef);
+
+        when(caderiaRepository.findByNome(nomeRepetido)).thenReturn(Optional.of(cadeiraRepetida));
+
+        Assertions.assertThrows(IllegalArgumentException.class, () -> cadeiraService.criaCadeira(dtoRef));
     }
 
 }

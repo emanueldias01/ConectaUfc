@@ -16,7 +16,9 @@ public class CadeiraService {
 
     public CadeiraResponseDTO criaCadeira(CadeiraRequestDTO dto){
 
-        //verificar se a cadeira ja foi registrada
+        if(repository.findByNome(dto.nome()).isPresent()){
+            throw new IllegalArgumentException("Cadeira já existe");
+        }
 
         Cadeira cadeira = new Cadeira(dto);
 
