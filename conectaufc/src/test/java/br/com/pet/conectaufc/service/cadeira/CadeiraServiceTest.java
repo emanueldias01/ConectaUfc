@@ -116,4 +116,34 @@ class CadeiraServiceTest {
 
     }
 
+    @Test
+    @DisplayName("Remove professor da cadeira")
+    void removeProfessorDaCadeira(){
+        CadeiraProfessorRequestDTO dtoArgumento = new CadeiraProfessorRequestDTO(1l, 1l);
+        Cadeira cadeiraRef = new Cadeira();
+        Professor professorRef = new Professor();
+
+        when(caderiaRepository.getReferenceById(dtoArgumento.idCadeira())).thenReturn(cadeiraRef);
+        when(professorRepository.getReferenceById(dtoArgumento.idProfessor())).thenReturn(professorRef);
+
+        cadeiraRef.addProfessorNaCadeira(professorRef);
+
+        assertThat(cadeiraService.removeProfessorDaCadeira(dtoArgumento).nomeProfessor()).isEqualTo(professorRef.getNome());
+    }
+
+    @Test
+    @DisplayName("Nao remove professor da cadeira pois ele nao esta na cadeira")
+    void naoRemoveProfessorPoisNaoEstaNaCadeira(){
+        CadeiraProfessorRequestDTO dtoArgumento = new CadeiraProfessorRequestDTO(1l, 1l);
+        Cadeira cadeiraRef = new Cadeira();
+        Professor professorRef = new Professor();
+
+        when(caderiaRepository.getReferenceById(dtoArgumento.idCadeira())).thenReturn(cadeiraRef);
+        when(professorRepository.getReferenceById(dtoArgumento.idProfessor())).thenReturn(professorRef);
+
+
+        Assertions.assertThrows(IllegalArgumentException.class, () -> cadeiraService.removeProfessorDaCadeira(dtoArgumento));
+
+    }
+
 }

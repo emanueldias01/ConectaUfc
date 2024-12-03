@@ -64,6 +64,23 @@ public class CadeiraService {
 
         cadeira.addProfessorNaCadeira(professor);
 
+        cadeiraRepository.save(cadeira);
+
+        return new CadeiraProfessorResponseDTO(dto.idCadeira(), cadeira.getNome(), professor.getNome());
+    }
+
+    public CadeiraProfessorResponseDTO removeProfessorDaCadeira(CadeiraProfessorRequestDTO dto){
+        Cadeira cadeira = cadeiraRepository.getReferenceById(dto.idCadeira());
+        Professor professor = professorRepository.getReferenceById(dto.idProfessor());
+
+        if(!cadeira.getProfessores().contains(professor)){
+            throw new IllegalArgumentException("Esse professor nao esta na cadeira");
+        }
+
+        cadeira.removeProfessorDaCadeira(professor);
+
+        cadeiraRepository.save(cadeira);
+
         return new CadeiraProfessorResponseDTO(dto.idCadeira(), cadeira.getNome(), professor.getNome());
     }
 }

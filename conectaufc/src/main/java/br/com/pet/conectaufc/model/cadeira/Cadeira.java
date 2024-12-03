@@ -56,5 +56,9 @@ public class Cadeira {
     public void addProfessorNaCadeira(Professor professor){
         professores.add(professor);
     }
+
+    public void removeProfessorDaCadeira(Professor professor) {
+        this.professores.remove(professor);
+    }
 }
 
