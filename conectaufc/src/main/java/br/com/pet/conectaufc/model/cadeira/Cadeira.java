@@ -1,5 +1,6 @@
 package br.com.pet.conectaufc.model.cadeira;
 
+import br.com.pet.conectaufc.dto.cadeira.CadeiraRequestDTO;
 import br.com.pet.conectaufc.model.material.Material;
 import br.com.pet.conectaufc.model.professor.Professor;
 import jakarta.persistence.*;
@@ -28,5 +29,9 @@ public class Cadeira {
 
     @OneToMany(mappedBy = "cadeira", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Material> materiais = new ArrayList<>();
+
+    public Cadeira(CadeiraRequestDTO dto) {
+        this.nome = dto.nome();
+    }
 }
 
