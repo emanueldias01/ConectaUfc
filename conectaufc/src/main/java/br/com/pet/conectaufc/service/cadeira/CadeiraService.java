@@ -46,4 +46,8 @@ public class CadeiraService {
 
         return new CadeiraResponseDTO(cadeira);
     }
+
+    public void deletaCadeira(Long id){
+        repository.deleteById(id);
+    }
 }
