@@ -4,6 +4,7 @@ import br.com.pet.conectaufc.dto.cadeira.*;
 import br.com.pet.conectaufc.model.cadeira.Cadeira;
 import br.com.pet.conectaufc.model.professor.Professor;
 import br.com.pet.conectaufc.repository.cadeira.CaderiaRepository;
+import br.com.pet.conectaufc.repository.material.MaterialRepository;
 import br.com.pet.conectaufc.repository.professor.ProfessorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,6 +18,9 @@ public class CadeiraService {
 
     @Autowired
     ProfessorRepository professorRepository;
+
+    @Autowired
+    MaterialRepository materialRepository;
 
     public CadeiraResponseDTO criaCadeira(CadeiraRequestDTO dto){
 
@@ -78,6 +82,7 @@ public class CadeiraService {
         }
 
         cadeira.removeProfessorDaCadeira(professor);
+        materialRepository.removeMaterialDoProfessorReferenteACadeira(professor.getId(), cadeira.getId());
 
         cadeiraRepository.save(cadeira);
 
