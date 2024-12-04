@@ -8,6 +8,8 @@ import br.com.pet.conectaufc.repository.cadeira.CaderiaRepository;
 import br.com.pet.conectaufc.repository.material.MaterialRepository;
 import br.com.pet.conectaufc.repository.professor.ProfessorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -36,8 +38,8 @@ public class CadeiraService {
         return new CadeiraResponseDTO(cadeira);
     }
 
-    public List<CadeiraResponseDTO> listaTodasAsCadeiras(){
-        return cadeiraRepository.findAllByOrderByNomeAsc().stream().map(CadeiraResponseDTO::new).toList();
+    public Page<CadeiraResponseDTO> listaTodasAsCadeiras(Pageable pageable){
+        return cadeiraRepository.findAllByOrderByNomeAsc(pageable).map(CadeiraResponseDTO::new);
     }
 
     public CadeiraResponseDTO buscaCadeiraPeloId(Long id){

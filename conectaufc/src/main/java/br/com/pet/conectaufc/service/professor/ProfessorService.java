@@ -5,6 +5,8 @@ import br.com.pet.conectaufc.dto.professor.ProfessorResponseDTO;
 import br.com.pet.conectaufc.model.professor.Professor;
 import br.com.pet.conectaufc.repository.professor.ProfessorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -32,12 +34,12 @@ public class ProfessorService {
         return new ProfessorResponseDTO(professorRepository.getReferenceById(id));
     }
 
-    public List<ProfessorResponseDTO> listaTodosOsProfessores(){
-        return professorRepository.findAll().stream().map(ProfessorResponseDTO::new).toList();
+    public Page<ProfessorResponseDTO> listaTodosOsProfessores(Pageable pageable){
+        return professorRepository.findAll(pageable).map(ProfessorResponseDTO::new);
     }
 
-    public List<ProfessorResponseDTO> listaProfessoresDeUmaDeterminadaCadeira(Long idCadeira){
-        return professorRepository.buscaProfessoresDeCadeiraEspecifica(idCadeira).stream().map(ProfessorResponseDTO::new).toList();
+    public Page<ProfessorResponseDTO> listaProfessoresDeUmaDeterminadaCadeira(Long idCadeira, Pageable pageable){
+        return professorRepository.buscaProfessoresDeCadeiraEspecifica(idCadeira, pageable).map(ProfessorResponseDTO::new);
     }
 
 }
