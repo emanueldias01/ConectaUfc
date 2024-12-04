@@ -40,6 +40,10 @@ public class CadeiraService {
         return cadeiraRepository.findAllByOrderByNomeAsc().stream().map(CadeiraResponseDTO::new).toList();
     }
 
+    public CadeiraResponseDTO buscaCadeiraPeloId(Long id){
+        return new CadeiraResponseDTO(cadeiraRepository.getReferenceById(id));
+    }
+
     public CadeiraResponseDTO atualizaNomeDaCadeira(CadeiraUpdateDTO dto){
 
         if (cadeiraRepository.findByNome(dto.nome()).isPresent()){
