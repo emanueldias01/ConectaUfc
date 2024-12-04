@@ -16,7 +16,10 @@ public class ProfessorService {
     ProfessorRepository professorRepository;
 
     public ProfessorResponseDTO criaProfessor(ProfessorRequestDTO dto){
-        //verifica se professor ja existe pelo nome
+
+        if(professorRepository.findByNome(dto.nome()).isPresent()){
+            throw new IllegalArgumentException("Ja existe um professor registrado com esse nome");
+        }
 
         Professor professor = new Professor(dto);
 
