@@ -1,6 +1,5 @@
 package br.com.pet.conectaufc.repository.professor;
 
-import br.com.pet.conectaufc.dto.professor.ProfessorResponseDTO;
 import br.com.pet.conectaufc.model.professor.Professor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
