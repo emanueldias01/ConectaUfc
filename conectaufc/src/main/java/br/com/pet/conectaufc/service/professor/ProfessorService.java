@@ -35,4 +35,9 @@ public class ProfessorService {
     public List<ProfessorResponseDTO> listaTodosOsProfessores(){
         return professorRepository.findAll().stream().map(ProfessorResponseDTO::new).toList();
     }
+
+    public List<ProfessorResponseDTO> listaProfessoresDeUmaDeterminadaCadeira(Long idCadeira){
+        return professorRepository.buscaProfessoresDeCadeiraEspecifica(idCadeira).stream().map(ProfessorResponseDTO::new).toList();
+    }
+
 }
