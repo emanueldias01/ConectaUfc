@@ -1,5 +1,6 @@
 package br.com.pet.conectaufc.model.professor;
 
+import br.com.pet.conectaufc.dto.professor.ProfessorRequestDTO;
 import br.com.pet.conectaufc.model.cadeira.Cadeira;
 import br.com.pet.conectaufc.model.material.Material;
 import jakarta.persistence.*;
@@ -31,6 +32,10 @@ public class Professor {
 
     public Professor() {
 
+    }
+
+    public Professor(ProfessorRequestDTO dto) {
+        this.nome = dto.nome();
     }
 
     public List<Cadeira> getCadeiras() {
