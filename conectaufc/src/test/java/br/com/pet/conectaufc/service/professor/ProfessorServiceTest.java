@@ -1,7 +1,7 @@
 package br.com.pet.conectaufc.service.professor;
 
 import br.com.pet.conectaufc.dto.professor.ProfessorRequestDTO;
-import br.com.pet.conectaufc.dto.professor.ProfessorResponseDTO;
+import br.com.pet.conectaufc.dto.professor.ProfessorUpdateDTO;
 import br.com.pet.conectaufc.model.professor.Professor;
 import br.com.pet.conectaufc.repository.professor.ProfessorRepository;
 import org.junit.jupiter.api.Assertions;
@@ -52,6 +52,42 @@ class ProfessorServiceTest {
         when(professorRepository.findByNome(nome)).thenReturn(Optional.of(professor));
 
         Assertions.assertThrows(IllegalArgumentException.class, () -> professorService.criaProfessor(dtoArgumento));
+    }
+
+    @Test
+    @DisplayName("Atualiza nome de professor")
+    void atualizaDadosProfessor(){
+
+        String nome = "nome";
+        String nomeAtualizado = "emon";
+
+        Long id = 1l;
+
+        ProfessorUpdateDTO dtoArgumento = new ProfessorUpdateDTO(id, nomeAtualizado);
+        Professor professor = new Professor(new ProfessorRequestDTO(nome));
+
+        when(professorRepository.getReferenceById(id)).thenReturn(professor);
+        when(professorRepository.findByNome(nomeAtualizado)).thenReturn(Optional.empty());
+
+        assertThat(professorService.atualizaNomeDoProfessor(dtoArgumento).nome()).isEqualTo(nomeAtualizado);
+    }
+
+    @Test
+    @DisplayName("Nao deve atualizar nome do professor porque ele ja esta em uso")
+    void naoAtualizaNomeProfessorNomeRepetido(){
+        String nome = "nome";
+        String nomeAtualizado = "emon";
+
+        Long id = 1l;
+
+        ProfessorUpdateDTO dtoArgumento = new ProfessorUpdateDTO(id, nomeAtualizado);
+        Professor professor = new Professor(new ProfessorRequestDTO(nome));
+
+        when(professorRepository.getReferenceById(id)).thenReturn(professor);
+        when(professorRepository.findByNome(nomeAtualizado)).thenReturn(Optional.of(new Professor()));
+
+        Assertions.assertThrows(IllegalArgumentException.class, () -> professorService.atualizaNomeDoProfessor(dtoArgumento));
+
     }
 
 }

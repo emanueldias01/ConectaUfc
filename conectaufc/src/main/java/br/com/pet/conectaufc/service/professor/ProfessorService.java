@@ -2,6 +2,7 @@ package br.com.pet.conectaufc.service.professor;
 
 import br.com.pet.conectaufc.dto.professor.ProfessorRequestDTO;
 import br.com.pet.conectaufc.dto.professor.ProfessorResponseDTO;
+import br.com.pet.conectaufc.dto.professor.ProfessorUpdateDTO;
 import br.com.pet.conectaufc.model.professor.Professor;
 import br.com.pet.conectaufc.repository.professor.ProfessorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +41,20 @@ public class ProfessorService {
 
     public Page<ProfessorResponseDTO> listaProfessoresDeUmaDeterminadaCadeira(Long idCadeira, Pageable pageable){
         return professorRepository.buscaProfessoresDeCadeiraEspecifica(idCadeira, pageable).map(ProfessorResponseDTO::new);
+    }
+
+    public ProfessorResponseDTO atualizaNomeDoProfessor(ProfessorUpdateDTO dto){
+        Professor professor = professorRepository.getReferenceById(dto.id());
+
+        if(professorRepository.findByNome(dto.nome()).isPresent()){
+            throw new IllegalArgumentException("Já existe um professor com o nome em que deseja atualizar");
+        }
+
+        professor.setNome(dto.nome());
+
+        professorRepository.save(professor);
+
+        return new ProfessorResponseDTO(professor);
     }
 
 }

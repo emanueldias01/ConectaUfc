@@ -34,6 +34,10 @@ public class Professor {
 
     }
 
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
     public Professor(ProfessorRequestDTO dto) {
         this.nome = dto.nome();
     }
