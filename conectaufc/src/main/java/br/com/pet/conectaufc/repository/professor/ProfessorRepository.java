@@ -14,6 +14,6 @@ import java.util.Optional;
 public interface ProfessorRepository extends JpaRepository<Professor, Long> {
     Optional<Professor> findByNome(String nome);
 
-    @Query("SELECT p FROM Professor p JOIN ProfessorCadeira pc ON p.id = pc.professor.id WHERE pc.cadeira.id = :idCadeira")
-    Page<Professor> buscaProfessoresDeCadeiraEspecifica(@Param("idCadeira") Long idCadeira, Pageable pageable);
+    @Query(value = "SELECT professor_id FROM professor_cadeira WHERE cadeira_id:=idCadeira", nativeQuery = true)
+    Page<Long> buscaProfessoresDeCadeiraEspecifica(@Param("idCadeira") Long idCadeira, Pageable pageable);
 }

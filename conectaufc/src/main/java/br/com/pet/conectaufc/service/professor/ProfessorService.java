@@ -4,6 +4,7 @@ import br.com.pet.conectaufc.dto.professor.ProfessorRequestDTO;
 import br.com.pet.conectaufc.dto.professor.ProfessorResponseDTO;
 import br.com.pet.conectaufc.dto.professor.ProfessorUpdateDTO;
 import br.com.pet.conectaufc.model.professor.Professor;
+import br.com.pet.conectaufc.repository.material.MaterialRepository;
 import br.com.pet.conectaufc.repository.professor.ProfessorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -11,12 +12,16 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ProfessorService {
 
     @Autowired
     ProfessorRepository professorRepository;
+
+    @Autowired
+    MaterialRepository materialRepository;
 
     public ProfessorResponseDTO criaProfessor(ProfessorRequestDTO dto){
 
@@ -40,7 +45,13 @@ public class ProfessorService {
     }
 
     public Page<ProfessorResponseDTO> listaProfessoresDeUmaDeterminadaCadeira(Long idCadeira, Pageable pageable){
-        return professorRepository.buscaProfessoresDeCadeiraEspecifica(idCadeira, pageable).map(ProfessorResponseDTO::new);
+        Page<Long> idProfessores = professorRepository.buscaProfessoresDeCadeiraEspecifica(idCadeira, pageable);
+
+        return idProfessores
+                .map(i -> {
+                    Professor professor = professorRepository.getReferenceById(i);
+                    return new ProfessorResponseDTO(professor);
+                });
     }
 
     public ProfessorResponseDTO atualizaNomeDoProfessor(ProfessorUpdateDTO dto){
@@ -55,6 +66,11 @@ public class ProfessorService {
         professorRepository.save(professor);
 
         return new ProfessorResponseDTO(professor);
+    }
+
+    public void deletaProfessor(Long id){
+        professorRepository.deleteById(id);
+        materialRepository.deletaTodoMaterialDoProfessor(id);
     }
 
 }
