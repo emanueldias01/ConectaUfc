@@ -71,4 +71,8 @@ public class MaterialService {
 
         return new MaterialResponseDTO(material);
     }
+
+    public void deletaMaterial(Long id){
+        materialRepository.deleteById(id);
+    }
 }
