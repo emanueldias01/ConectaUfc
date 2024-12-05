@@ -67,8 +67,8 @@ public class ProfessorService {
     }
 
     public void deletaProfessor(Long id){
-        professorRepository.deleteById(id);
         materialRepository.deletaTodoMaterialDoProfessor(id);
+        professorRepository.deleteById(id);
     }
 
 }

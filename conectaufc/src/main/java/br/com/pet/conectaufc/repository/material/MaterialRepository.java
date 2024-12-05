@@ -25,6 +25,9 @@ public interface MaterialRepository extends JpaRepository<Material, Long> {
     @Query(value = "DELETE FROM tab_material WHERE cadeira_id=:id",nativeQuery = true)
     void deletaTodoMaterialDaCadeira(@Param("id") Long id);
 
+
+    @Modifying
+    @Transactional
     @Query(value = "DELETE FROM tab_material WHERE professor_id=:id", nativeQuery = true)
     void deletaTodoMaterialDoProfessor(@Param("id") Long id);
 

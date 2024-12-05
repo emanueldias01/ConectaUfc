@@ -50,7 +50,7 @@ public class ProfessorController {
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity deletaProfessor(@RequestParam("id") Long id){
+    public ResponseEntity deletaProfessor(@PathVariable("id") Long id){
         professorService.deletaProfessor(id);
         return ResponseEntity.noContent().build();
     }
