@@ -8,6 +8,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.Optional;
+
 public interface MaterialRepository extends JpaRepository<Material, Long> {
 
     Page<Material> findAllByOrderByNomeAsc(Pageable pageable);
@@ -23,4 +25,8 @@ public interface MaterialRepository extends JpaRepository<Material, Long> {
 
     @Query(value = "DELETE from tab_material WHERE cadeira_id=:idCadeira AND professor_id=:idProfessor", nativeQuery = true)
     Page<Material> buscaMateriaisDaCadeiraEProfessorEspecifico(@Param("idCadeira") Long idCadeira, @Param("idProfessor") Long idProfessor, Pageable pageable);
+
+    Optional<Material> findByNome(String nome);
+
+    Optional<Material> findByLink(String link);
 }

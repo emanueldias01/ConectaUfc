@@ -1,6 +1,7 @@
 package br.com.pet.conectaufc.model.material;
 
 import br.com.pet.conectaufc.dto.material.MaterialRequestDTO;
+import br.com.pet.conectaufc.dto.material.MaterialUpdateDTO;
 import br.com.pet.conectaufc.model.cadeira.Cadeira;
 import br.com.pet.conectaufc.model.professor.Professor;
 import jakarta.persistence.*;
@@ -56,6 +57,11 @@ public class Material {
 
     public String getNome() {
         return nome;
+    }
+
+    public void atualizaMaterial(MaterialUpdateDTO dto) {
+        this.nome = dto.nome();
+        this.link = dto.link();
     }
 }
 

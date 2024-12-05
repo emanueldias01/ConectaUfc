@@ -2,6 +2,7 @@ package br.com.pet.conectaufc.service.material;
 
 import br.com.pet.conectaufc.dto.cadeira.CadeiraRequestDTO;
 import br.com.pet.conectaufc.dto.material.MaterialRequestDTO;
+import br.com.pet.conectaufc.dto.material.MaterialUpdateDTO;
 import br.com.pet.conectaufc.dto.professor.ProfessorRequestDTO;
 import br.com.pet.conectaufc.model.cadeira.Cadeira;
 import br.com.pet.conectaufc.model.material.Material;
@@ -16,6 +17,8 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
@@ -114,4 +117,59 @@ class MaterialServiceTest {
         Assertions.assertThrows(IllegalArgumentException.class, () -> materialService.criaMaterial(dtoArgumento));
     }
 
+    @Test
+    @DisplayName("Deve conseguir editar material")
+    void editaMaterial(){
+
+        Material materialRef = new Material(new MaterialRequestDTO("nome", 1L, 1L, "googledrive.com/aaa"), new Professor(), new Cadeira());
+
+        Long idMaterial = 1L;
+        String nomeAtualizado = "materialAtualizado";
+        String linkAtualizado = "googledrive.com/atualizado";
+
+        MaterialUpdateDTO dtoArgumento = new MaterialUpdateDTO(idMaterial, nomeAtualizado, linkAtualizado);
+
+        when(materialRepository.getReferenceById(idMaterial)).thenReturn(materialRef);
+        when(materialRepository.findByNome(dtoArgumento.nome())).thenReturn(Optional.empty());
+        when(materialRepository.findByLink(dtoArgumento.link())).thenReturn(Optional.empty());
+
+        assertThat(materialService.editaMaterial(dtoArgumento).nome()).isEqualTo(nomeAtualizado);
+        assertThat(materialService.editaMaterial(dtoArgumento).link()).isEqualTo(linkAtualizado);
+    }
+
+    @Test
+    @DisplayName("Nao cria material devido a nome de atualizacao estar em uso")
+    void naoEditaMaterialNomeEmUso(){
+        Material materialRef = new Material(new MaterialRequestDTO("nome", 1L, 1L, "googledrive.com/aaa"), new Professor(), new Cadeira());
+
+        Long idMaterial = 1L;
+        String nomeAtualizado = "materialAtualizado";
+        String linkAtualizado = "googledrive.com/atualizado";
+
+        MaterialUpdateDTO dtoArgumento = new MaterialUpdateDTO(idMaterial, nomeAtualizado, linkAtualizado);
+
+        when(materialRepository.getReferenceById(idMaterial)).thenReturn(materialRef);
+        when(materialRepository.findByNome(dtoArgumento.nome())).thenReturn(Optional.of(new Material()));
+        when(materialRepository.findByLink(dtoArgumento.link())).thenReturn(Optional.empty());
+
+        Assertions.assertThrows(IllegalArgumentException.class, () -> materialService.editaMaterial(dtoArgumento));
+    }
+
+    @Test
+    @DisplayName("Nao cria material devido a nome de atualizacao estar em uso")
+    void naoEditaMaterialLinkEmUso(){
+        Material materialRef = new Material(new MaterialRequestDTO("nome", 1L, 1L, "googledrive.com/aaa"), new Professor(), new Cadeira());
+
+        Long idMaterial = 1L;
+        String nomeAtualizado = "materialAtualizado";
+        String linkAtualizado = "googledrive.com/atualizado";
+
+        MaterialUpdateDTO dtoArgumento = new MaterialUpdateDTO(idMaterial, nomeAtualizado, linkAtualizado);
+
+        when(materialRepository.getReferenceById(idMaterial)).thenReturn(materialRef);
+        when(materialRepository.findByNome(dtoArgumento.nome())).thenReturn(Optional.empty());
+        when(materialRepository.findByLink(dtoArgumento.link())).thenReturn(Optional.of(new Material()));
+
+        Assertions.assertThrows(IllegalArgumentException.class, () -> materialService.editaMaterial(dtoArgumento));
+    }
 }

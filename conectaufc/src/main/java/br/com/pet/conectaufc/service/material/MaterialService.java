@@ -2,6 +2,7 @@ package br.com.pet.conectaufc.service.material;
 
 import br.com.pet.conectaufc.dto.material.MaterialRequestDTO;
 import br.com.pet.conectaufc.dto.material.MaterialResponseDTO;
+import br.com.pet.conectaufc.dto.material.MaterialUpdateDTO;
 import br.com.pet.conectaufc.model.cadeira.Cadeira;
 import br.com.pet.conectaufc.model.material.Material;
 import br.com.pet.conectaufc.model.professor.Professor;
@@ -55,5 +56,19 @@ public class MaterialService {
 
     public Page<MaterialResponseDTO> listarTodosOsMateirais(Pageable pageable){
         return materialRepository.findAllByOrderByNomeAsc(pageable).map(MaterialResponseDTO::new);
+    }
+
+    public MaterialResponseDTO editaMaterial(MaterialUpdateDTO dto){
+        Material material = materialRepository.getReferenceById(dto.id());
+
+        if(materialRepository.findByNome(dto.nome()).isPresent() || materialRepository.findByLink(dto.link()).isPresent()){
+            throw new IllegalArgumentException("Os campos que está tentando editar já estao preenchidos com outro material");
+        }
+
+        material.atualizaMaterial(dto);
+
+        materialRepository.save(material);
+
+        return new MaterialResponseDTO(material);
     }
 }
