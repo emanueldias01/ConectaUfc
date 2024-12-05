@@ -103,6 +103,33 @@ class MaterialServiceTest {
         String nomeMaterial = "slide aula 1";
 
         String link = "googledrive.com/slide";
+        String linkArgumento = "googledrive.com/aaa";
+
+        MaterialRequestDTO dtoArgumento = new MaterialRequestDTO(nomeMaterial, idProfessor, idCadeira, link);
+
+        when(professorRepository.getReferenceById(idProfessor)).thenReturn(professor);
+        when(cadeiraRepository.getReferenceById(idCadeira)).thenReturn(cadeira);
+
+        MaterialRequestDTO dtoConstrutor = new MaterialRequestDTO(nomeMaterial, idProfessor, idCadeira, linkArgumento);
+
+        Material material = new Material(dtoConstrutor, professor, cadeira);
+        professor.addMaterialDeProfessor(material);
+
+        Assertions.assertThrows(IllegalArgumentException.class, () -> materialService.criaMaterial(dtoArgumento));
+    }
+
+    @Test
+    @DisplayName("Nao deve criar material devido a nome repetido de material na mesma cadeira com o mesmo professor")
+    void naoCriaMaterialRepetidoNomeELink(){
+        Long idProfessor = 1L;
+        Long idCadeira = 1L;
+
+        Professor professor = new Professor(idProfessor, "nomeProf");
+        Cadeira cadeira = new Cadeira(idCadeira, "calculo");
+
+        String nomeMaterial = "slide aula 1";
+
+        String link = "googledrive.com/slide";
 
         MaterialRequestDTO dtoArgumento = new MaterialRequestDTO(nomeMaterial, idProfessor, idCadeira, link);
 
