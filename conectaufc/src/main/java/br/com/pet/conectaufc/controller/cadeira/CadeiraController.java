@@ -35,7 +35,7 @@ public class CadeiraController {
         return ResponseEntity.created(uri).body(cadeira);
     }
 
-    @PutMapping("/updateCadeira")
+    @PutMapping("/update")
     public ResponseEntity<CadeiraResponseDTO> atualizaCadeira(@RequestBody CadeiraUpdateDTO dto){
         return ResponseEntity.ok(cadeiraService.atualizaNomeDaCadeira(dto));
     }

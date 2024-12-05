@@ -73,6 +73,7 @@ public class CadeiraService {
         }
 
         cadeira.addProfessorNaCadeira(professor);
+        professorRepository.salvaProfessorNaquelaCadeira(dto.idProfessor(), dto.idCadeira());
 
         cadeiraRepository.save(cadeira);
 

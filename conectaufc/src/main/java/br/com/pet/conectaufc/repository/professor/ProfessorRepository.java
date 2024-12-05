@@ -13,6 +13,9 @@ import java.util.Optional;
 public interface ProfessorRepository extends JpaRepository<Professor, Long> {
     Optional<Professor> findByNome(String nome);
 
-    @Query(value = "SELECT professor_id FROM professor_cadeira WHERE cadeira_id:=idCadeira", nativeQuery = true)
+    @Query(value = "SELECT professor_id FROM professor_cadeira WHERE cadeira_id=:idCadeira", nativeQuery = true)
     Page<Long> buscaProfessoresDeCadeiraEspecifica(@Param("idCadeira") Long idCadeira, Pageable pageable);
+
+    @Query(value = "INSERT INTO professor_cadeira(professor_id, cadeira_id) VALUES (:idProfessor, :idCadeira)", nativeQuery = true)
+    void salvaProfessorNaquelaCadeira(@Param("idProfessor") Long idProfessor, @Param("idCadeira") Long idCadeira);
 }
