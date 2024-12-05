@@ -60,8 +60,13 @@ public class CadeiraService {
     }
 
     public void deletaCadeira(Long id){
+        if(!materialRepository.buscaMateriaisDeCadeiraEspecifica(id).isEmpty()){
+            materialRepository.deletaTodoMaterialDaCadeira(id);
+        }
+
+        professorRepository.removeVinculoDeProfessorComCadeira(id);
+
         cadeiraRepository.deleteById(id);
-        materialRepository.deletaTodoMaterialDaCadeira(id);
     }
 
     public CadeiraProfessorResponseDTO adicionaProfessorAUmaCadeira(CadeiraProfessorRequestDTO dto){
