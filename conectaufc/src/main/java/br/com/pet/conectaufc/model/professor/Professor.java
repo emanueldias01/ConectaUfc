@@ -34,6 +34,11 @@ public class Professor {
 
     }
 
+    public Professor(Long idProfessor, String nome) {
+        this.id = idProfessor;
+        this.nome = nome;
+    }
+
     public void setNome(String nome) {
         this.nome = nome;
     }

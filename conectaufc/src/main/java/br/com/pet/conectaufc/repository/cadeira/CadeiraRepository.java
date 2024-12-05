@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
 
-public interface CaderiaRepository extends JpaRepository<Cadeira, Long> {
+public interface CadeiraRepository extends JpaRepository<Cadeira, Long> {
     Page<Cadeira> findAllByOrderByNomeAsc(Pageable pageable);
 
     Optional<Cadeira> findByNome(String nome);

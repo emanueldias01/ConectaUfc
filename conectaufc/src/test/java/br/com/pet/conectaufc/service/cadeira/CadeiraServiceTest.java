@@ -7,7 +7,7 @@ import br.com.pet.conectaufc.dto.cadeira.CadeiraUpdateDTO;
 import br.com.pet.conectaufc.model.cadeira.Cadeira;
 import br.com.pet.conectaufc.model.material.Material;
 import br.com.pet.conectaufc.model.professor.Professor;
-import br.com.pet.conectaufc.repository.cadeira.CaderiaRepository;
+import br.com.pet.conectaufc.repository.cadeira.CadeiraRepository;
 import br.com.pet.conectaufc.repository.material.MaterialRepository;
 import br.com.pet.conectaufc.repository.professor.ProfessorRepository;
 import org.junit.jupiter.api.Assertions;
@@ -26,7 +26,7 @@ import static org.mockito.Mockito.when;
 class CadeiraServiceTest {
 
     @Mock
-    CaderiaRepository caderiaRepository;
+    CadeiraRepository caderiaRepository;
 
     @Mock
     ProfessorRepository professorRepository;

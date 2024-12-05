@@ -1,5 +1,6 @@
 package br.com.pet.conectaufc.model.material;
 
+import br.com.pet.conectaufc.dto.material.MaterialRequestDTO;
 import br.com.pet.conectaufc.model.cadeira.Cadeira;
 import br.com.pet.conectaufc.model.professor.Professor;
 import jakarta.persistence.*;
@@ -14,6 +15,8 @@ public class Material {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private String nome;
+
     @ManyToOne
     @JoinColumn(name = "cadeira_id", nullable = false)
     private Cadeira cadeira;
@@ -26,6 +29,13 @@ public class Material {
 
     public Material(){
 
+    }
+
+    public Material(MaterialRequestDTO dto, Professor professor, Cadeira cadeira) {
+        this.nome = dto.nome();
+        this.cadeira = cadeira;
+        this.professor = professor;
+        this.link = dto.link();
     }
 
     public Cadeira getCadeira() {
@@ -42,6 +52,10 @@ public class Material {
 
     public Professor getProfessor() {
         return professor;
+    }
+
+    public String getNome() {
+        return nome;
     }
 }
 

@@ -2,9 +2,8 @@ package br.com.pet.conectaufc.service.cadeira;
 
 import br.com.pet.conectaufc.dto.cadeira.*;
 import br.com.pet.conectaufc.model.cadeira.Cadeira;
-import br.com.pet.conectaufc.model.material.Material;
 import br.com.pet.conectaufc.model.professor.Professor;
-import br.com.pet.conectaufc.repository.cadeira.CaderiaRepository;
+import br.com.pet.conectaufc.repository.cadeira.CadeiraRepository;
 import br.com.pet.conectaufc.repository.material.MaterialRepository;
 import br.com.pet.conectaufc.repository.professor.ProfessorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +15,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class CadeiraService {
     @Autowired
-    CaderiaRepository cadeiraRepository;
+    CadeiraRepository cadeiraRepository;
 
     @Autowired
     ProfessorRepository professorRepository;

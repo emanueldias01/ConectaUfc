@@ -33,12 +33,21 @@ public class Cadeira {
         this.nome = dto.nome();
     }
 
+    public Cadeira(Long idCadeira, String nome) {
+        this.id = idCadeira;
+        this.nome = nome;
+    }
+
     public Long getId() {
         return id;
     }
 
     public List<Material> getMateriais() {
         return materiais;
+    }
+
+    public void addMaterial(Material material){
+        materiais.add(material);
     }
 
     public String getNome() {
