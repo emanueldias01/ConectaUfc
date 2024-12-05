@@ -9,6 +9,8 @@ import br.com.pet.conectaufc.repository.cadeira.CadeiraRepository;
 import br.com.pet.conectaufc.repository.material.MaterialRepository;
 import br.com.pet.conectaufc.repository.professor.ProfessorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -41,5 +43,17 @@ public class MaterialService {
         materialRepository.save(material);
 
         return new MaterialResponseDTO(material);
+    }
+
+    public MaterialResponseDTO buscaMaterialPorId(Long id){
+        return new MaterialResponseDTO(materialRepository.getReferenceById(id));
+    }
+
+    public Page<MaterialResponseDTO> listaTodosOsMateriaisDeCertaCadeiraEDeCertoProfessor(Long idCadeira, Long idProfessor, Pageable pageable){
+        return materialRepository.buscaMateriaisDaCadeiraEProfessorEspecifico(idCadeira, idProfessor, pageable).map(MaterialResponseDTO::new);
+    }
+
+    public Page<MaterialResponseDTO> listarTodosOsMateirais(Pageable pageable){
+        return materialRepository.findAllByOrderByNomeAsc(pageable).map(MaterialResponseDTO::new);
     }
 }
