@@ -138,7 +138,7 @@ class MaterialServiceTest {
     }
 
     @Test
-    @DisplayName("Nao cria material devido a nome de atualizacao estar em uso")
+    @DisplayName("Nao edita material devido a nome de atualizacao estar em uso")
     void naoEditaMaterialNomeEmUso(){
         Material materialRef = new Material(new MaterialRequestDTO("nome", 1L, 1L, "googledrive.com/aaa"), new Professor(), new Cadeira());
 
@@ -156,7 +156,7 @@ class MaterialServiceTest {
     }
 
     @Test
-    @DisplayName("Nao cria material devido a nome de atualizacao estar em uso")
+    @DisplayName("Nao edita material devido a nome de atualizacao estar em uso")
     void naoEditaMaterialLinkEmUso(){
         Material materialRef = new Material(new MaterialRequestDTO("nome", 1L, 1L, "googledrive.com/aaa"), new Professor(), new Cadeira());
 
@@ -168,6 +168,24 @@ class MaterialServiceTest {
 
         when(materialRepository.getReferenceById(idMaterial)).thenReturn(materialRef);
         when(materialRepository.findByNome(dtoArgumento.nome())).thenReturn(Optional.empty());
+        when(materialRepository.findByLink(dtoArgumento.link())).thenReturn(Optional.of(new Material()));
+
+        Assertions.assertThrows(IllegalArgumentException.class, () -> materialService.editaMaterial(dtoArgumento));
+    }
+
+    @Test
+    @DisplayName("Nao cria material devido nome e link estar em uso")
+    void naoEditaMaterialLinkENomeEmUso(){
+        Material materialRef = new Material(new MaterialRequestDTO("nome", 1L, 1L, "googledrive.com/aaa"), new Professor(), new Cadeira());
+
+        Long idMaterial = 1L;
+        String nomeAtualizado = "materialAtualizado";
+        String linkAtualizado = "googledrive.com/atualizado";
+
+        MaterialUpdateDTO dtoArgumento = new MaterialUpdateDTO(idMaterial, nomeAtualizado, linkAtualizado);
+
+        when(materialRepository.getReferenceById(idMaterial)).thenReturn(materialRef);
+        when(materialRepository.findByNome(dtoArgumento.nome())).thenReturn(Optional.of(new Material()));
         when(materialRepository.findByLink(dtoArgumento.link())).thenReturn(Optional.of(new Material()));
 
         Assertions.assertThrows(IllegalArgumentException.class, () -> materialService.editaMaterial(dtoArgumento));
