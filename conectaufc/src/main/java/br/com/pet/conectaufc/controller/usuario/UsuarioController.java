@@ -1,6 +1,8 @@
 package br.com.pet.conectaufc.controller.usuario;
 
 import br.com.pet.conectaufc.dto.usuario.LoginDTO;
+import br.com.pet.conectaufc.infra.security.TokenService;
+import br.com.pet.conectaufc.model.usuario.Usuario;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,10 +19,14 @@ public class UsuarioController {
     @Autowired
     AuthenticationManager authenticationManager;
 
+    @Autowired
+    TokenService tokenService;
+
     @PostMapping("/login")
-    public ResponseEntity<Authentication> login(@Valid @RequestBody LoginDTO dto){
+    public ResponseEntity<String> login(@Valid @RequestBody LoginDTO dto){
         var authenticationToken = new UsernamePasswordAuthenticationToken(dto.username(), dto.password());
         var auth = authenticationManager.authenticate(authenticationToken);
-        return ResponseEntity.ok(auth);
+        String token = tokenService.gerarToken((Usuario) auth.getPrincipal());
+        return ResponseEntity.ok(token);
     }
 }
