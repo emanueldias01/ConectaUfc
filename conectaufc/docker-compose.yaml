@@ -3,36 +3,27 @@ version: '3.8'
 services:
   db:
     image: postgres:13
-    container_name: postgres
+    container_name: conecta_ufc_db
+    hostname: postgres
     environment:
       - POSTGRES_USER=root
       - POSTGRES_PASSWORD=root
-      - POSTGRES_DB=conecta_ufc
+      - POSTGRES_DB=
     ports:
-      - "5432:5432"
-    restart: always
+      - 5432:5432
     volumes:
       - postgres_data:/var/lib/postgresql/data
-    networks:
-      - my_network
+    restart: always
 
-  pgadmin:
-    image: dpage/pgadmin4
-    container_name: pgadmin
-    environment:
-      PGADMIN_DEFAULT_EMAIL: conectaufc@email.com
-      PGADMIN_DEFAULT_PASSWORD: root
+  app:
+    container_name: conecta_ufc_app
+    build :
+      context: .
+      target: prod
     ports:
-      - "54321:80"  # Porta para acessar o pgAdmin via browser
-    networks:
-      - my_network
+      - 8080:8080
     depends_on:
       - db
 
-networks:
-  my_network:
-    driver: bridge
-
 volumes:
   postgres_data:
-    driver: local
