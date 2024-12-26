@@ -3,6 +3,7 @@ package br.com.pet.conectaufc.infra.security;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -30,6 +31,16 @@ public class SecurityConfiguration {
                 auth -> {
                     auth.requestMatchers("/login").permitAll();
                     auth.requestMatchers("/register").permitAll();
+                    auth.requestMatchers(HttpMethod.POST,"/cadeira/**").hasRole("MONITOR");
+                    auth.requestMatchers(HttpMethod.POST, "/professor/**").hasRole("MONITOR");
+                    auth.requestMatchers(HttpMethod.POST, "/material/**").hasRole("MONITOR");
+                    auth.requestMatchers(HttpMethod.DELETE,"/cadeira/**").hasRole("MONITOR");
+                    auth.requestMatchers(HttpMethod.DELETE, "/professor/**").hasRole("MONITOR");
+                    auth.requestMatchers(HttpMethod.DELETE, "/material/**").hasRole("MONITOR");
+                    auth.requestMatchers(HttpMethod.PUT,"/cadeira/**").hasRole("MONITOR");
+                    auth.requestMatchers(HttpMethod.PUT, "/professor/**").hasRole("MONITOR");
+                    auth.requestMatchers(HttpMethod.PUT, "/material/**").hasRole("MONITOR");
+
                     auth.anyRequest().authenticated();
                 }
 
