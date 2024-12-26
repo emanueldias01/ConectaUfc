@@ -1,5 +1,7 @@
 package br.com.pet.conectaufc.service.usuario;
 
+import br.com.pet.conectaufc.model.usuario.Usuario;
+import br.com.pet.conectaufc.model.usuario.UsuarioRole;
 import br.com.pet.conectaufc.repository.usuario.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -16,5 +18,9 @@ public class UsuarioService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         return usuarioRepository.findByUsername(username);
+    }
+
+    public void salvaUsuario(String username, String password, UsuarioRole role){
+        usuarioRepository.save(new Usuario(username, password, role));
     }
 }
