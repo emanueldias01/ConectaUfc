@@ -27,7 +27,11 @@ public class SecurityConfiguration {
                 .csrf(csrf -> csrf.disable())
                 .addFilterBefore(filterToken, UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests(
-                auth -> auth.anyRequest().permitAll()
+                auth -> {
+                    auth.requestMatchers("/login").permitAll();
+                    auth.anyRequest().authenticated();
+                }
+
         ).build();
     }
 
