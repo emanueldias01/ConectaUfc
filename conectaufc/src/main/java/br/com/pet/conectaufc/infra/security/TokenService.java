@@ -7,6 +7,7 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTCreationException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
@@ -17,9 +18,12 @@ import java.time.ZoneOffset;
 @Service
 public class TokenService {
 
+    @Value("${api.security.token}")
+    private String secret;
+
     public String gerarToken(Usuario usuario){
         try {
-            Algorithm algorithm = Algorithm.HMAC256("12345678");
+            Algorithm algorithm = Algorithm.HMAC256(secret);
             return JWT.create()
                     .withIssuer("conectaUfc")
                     .withSubject(usuario.getUsername())
@@ -39,7 +43,7 @@ public class TokenService {
     public String validaToken(String token) {
         DecodedJWT decodedJWT;
         try {
-            Algorithm algorithm = Algorithm.HMAC256("12345678");
+            Algorithm algorithm = Algorithm.HMAC256(secret);
             JWTVerifier verifier = JWT.require(algorithm)
                     .withIssuer("conectaUfc")
                     .build();
