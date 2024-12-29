@@ -6,6 +6,7 @@ import br.com.pet.conectaufc.dto.professor.ProfessorUpdateDTO;
 import br.com.pet.conectaufc.model.professor.Professor;
 import br.com.pet.conectaufc.repository.material.MaterialRepository;
 import br.com.pet.conectaufc.repository.professor.ProfessorRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -21,6 +22,7 @@ public class ProfessorService {
     @Autowired
     MaterialRepository materialRepository;
 
+    @Transactional
     public ProfessorResponseDTO criaProfessor(ProfessorRequestDTO dto){
 
         if(professorRepository.findByNome(dto.nome()).isPresent()){
@@ -52,6 +54,7 @@ public class ProfessorService {
                 });
     }
 
+    @Transactional
     public ProfessorResponseDTO atualizaNomeDoProfessor(ProfessorUpdateDTO dto){
         Professor professor = professorRepository.getReferenceById(dto.id());
 
@@ -66,6 +69,7 @@ public class ProfessorService {
         return new ProfessorResponseDTO(professor);
     }
 
+    @Transactional
     public void deletaProfessor(Long id){
         materialRepository.deletaTodoMaterialDoProfessor(id);
         professorRepository.deleteById(id);

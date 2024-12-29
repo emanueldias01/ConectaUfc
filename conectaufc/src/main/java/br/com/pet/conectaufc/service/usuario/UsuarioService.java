@@ -3,6 +3,7 @@ package br.com.pet.conectaufc.service.usuario;
 import br.com.pet.conectaufc.model.usuario.Usuario;
 import br.com.pet.conectaufc.model.usuario.UsuarioRole;
 import br.com.pet.conectaufc.repository.usuario.UsuarioRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -21,6 +22,7 @@ public class UsuarioService implements UserDetailsService {
         return usuarioRepository.findByUsername(username);
     }
 
+    @Transactional
     public void salvaUsuario(String username, String password, UsuarioRole role){
         String senhaEncriptada = new BCryptPasswordEncoder().encode(password);
 

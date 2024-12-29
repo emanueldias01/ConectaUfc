@@ -6,6 +6,7 @@ import br.com.pet.conectaufc.model.professor.Professor;
 import br.com.pet.conectaufc.repository.cadeira.CadeiraRepository;
 import br.com.pet.conectaufc.repository.material.MaterialRepository;
 import br.com.pet.conectaufc.repository.professor.ProfessorRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -23,6 +24,7 @@ public class CadeiraService {
     @Autowired
     MaterialRepository materialRepository;
 
+    @Transactional
     public CadeiraResponseDTO criaCadeira(CadeiraRequestDTO dto){
 
         if(cadeiraRepository.findByNome(dto.nome()).isPresent()){
@@ -44,6 +46,7 @@ public class CadeiraService {
         return new CadeiraResponseDTO(cadeiraRepository.getReferenceById(id));
     }
 
+    @Transactional
     public CadeiraResponseDTO atualizaNomeDaCadeira(CadeiraUpdateDTO dto){
 
         if (cadeiraRepository.findByNome(dto.nome()).isPresent()){
@@ -59,6 +62,7 @@ public class CadeiraService {
         return new CadeiraResponseDTO(cadeira);
     }
 
+    @Transactional
     public void deletaCadeira(Long id){
         if(!materialRepository.buscaMateriaisDeCadeiraEspecifica(id).isEmpty()){
             materialRepository.deletaTodoMaterialDaCadeira(id);
@@ -69,6 +73,7 @@ public class CadeiraService {
         cadeiraRepository.deleteById(id);
     }
 
+    @Transactional
     public CadeiraProfessorResponseDTO adicionaProfessorAUmaCadeira(CadeiraProfessorRequestDTO dto){
         Cadeira cadeira = cadeiraRepository.getReferenceById(dto.idCadeira());
         Professor professor = professorRepository.getReferenceById(dto.idProfessor());
@@ -85,6 +90,7 @@ public class CadeiraService {
         return new CadeiraProfessorResponseDTO(dto.idCadeira(), cadeira.getNome(), professor.getNome());
     }
 
+    @Transactional
     public CadeiraProfessorResponseDTO removeProfessorDaCadeira(CadeiraProfessorRequestDTO dto){
         Cadeira cadeira = cadeiraRepository.getReferenceById(dto.idCadeira());
         Professor professor = professorRepository.getReferenceById(dto.idProfessor());

@@ -9,6 +9,7 @@ import br.com.pet.conectaufc.model.professor.Professor;
 import br.com.pet.conectaufc.repository.cadeira.CadeiraRepository;
 import br.com.pet.conectaufc.repository.material.MaterialRepository;
 import br.com.pet.conectaufc.repository.professor.ProfessorRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -27,6 +28,7 @@ public class MaterialService {
     @Autowired
     ProfessorRepository professorRepository;
 
+    @Transactional
     public MaterialResponseDTO criaMaterial(MaterialRequestDTO dto){
         Professor professor = professorRepository.getReferenceById(dto.idProfessor());
         Cadeira cadeira = cadeiraRepository.getReferenceById(dto.idCadeira());
@@ -58,6 +60,7 @@ public class MaterialService {
         return materialRepository.findAllByOrderByNomeAsc(pageable).map(MaterialResponseDTO::new);
     }
 
+    @Transactional
     public MaterialResponseDTO editaMaterial(MaterialUpdateDTO dto){
         Material material = materialRepository.getReferenceById(dto.id());
 
@@ -72,6 +75,7 @@ public class MaterialService {
         return new MaterialResponseDTO(material);
     }
 
+    @Transactional
     public void deletaMaterial(Long id){
         materialRepository.deleteById(id);
     }
