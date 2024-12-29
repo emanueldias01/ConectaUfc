@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -42,9 +41,7 @@ public class UsuarioController {
             throw new RuntimeException("Já existe um usuario com esse username");
         }
 
-        String senhaEncriptada = new BCryptPasswordEncoder().encode(dto.password());
-
-        usuarioService.salvaUsuario(dto.username(), senhaEncriptada, dto.role());
+        usuarioService.salvaUsuario(dto.username(), dto.password(), dto.role());
 
         return ResponseEntity.ok().build();
     }
