@@ -48,7 +48,7 @@ public class ProfessorController {
     public ResponseEntity<ProfessorResponseDTO> criaProfessor(@RequestBody ProfessorRequestDTO dto){
         ProfessorResponseDTO professor = professorService.criaProfessor(dto);
 
-        URI location = URI.create("/professores/" + dto.nome());
+        URI location = URI.create("/professores/" + professor.id());
 
         return ResponseEntity.created(location).body(professor);
     }

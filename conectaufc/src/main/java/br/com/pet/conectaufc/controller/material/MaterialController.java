@@ -49,7 +49,7 @@ public class MaterialController {
     public ResponseEntity<MaterialResponseDTO> criaMaterial(@RequestBody MaterialRequestDTO dto){
         MaterialResponseDTO material = materialService.criaMaterial(dto);
 
-        URI location = URI.create("/materiais/" + dto.nome());
+        URI location = URI.create("/materiais/" + material.id());
 
         return ResponseEntity.created(location).body(material);
     }

@@ -38,7 +38,7 @@ public class CadeiraController {
     public ResponseEntity<CadeiraResponseDTO> criaCadeira(@RequestBody CadeiraRequestDTO dto){
         CadeiraResponseDTO cadeira = cadeiraService.criaCadeira(dto);
 
-        URI location = URI.create("/users/" + dto.nome());
+        URI location = URI.create("/users/" + cadeira.id());
 
         return ResponseEntity.created(location).body(cadeira);
     }
