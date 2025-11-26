@@ -5,6 +5,7 @@ import br.com.pet.conectaufc.dto.material.MaterialResponseDTO;
 import br.com.pet.conectaufc.dto.material.MaterialUpdateDTO;
 import br.com.pet.conectaufc.exceptions.BussinessException;
 import br.com.pet.conectaufc.exceptions.EntityNotFoundException;
+import br.com.pet.conectaufc.exceptions.InvalidFieldsException;
 import br.com.pet.conectaufc.model.cadeira.Cadeira;
 import br.com.pet.conectaufc.model.material.Material;
 import br.com.pet.conectaufc.model.professor.Professor;
@@ -67,7 +68,7 @@ public class MaterialService {
                 .orElseThrow(() -> new EntityNotFoundException("Material nao encontrado"));
 
         if(materialRepository.findByNome(dto.nome()).isPresent() || materialRepository.findByLink(dto.link()).isPresent()){
-            throw new IllegalArgumentException("Os campos que está tentando editar já estao preenchidos com outro material");
+            throw new InvalidFieldsException("Os campos que está tentando editar já estao preenchidos com outro material");
         }
 
         material.atualizaMaterial(dto);

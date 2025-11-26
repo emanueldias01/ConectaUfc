@@ -4,6 +4,8 @@ import br.com.pet.conectaufc.dto.cadeira.CadeiraProfessorRequestDTO;
 import br.com.pet.conectaufc.dto.cadeira.CadeiraRequestDTO;
 import br.com.pet.conectaufc.dto.cadeira.CadeiraResponseDTO;
 import br.com.pet.conectaufc.dto.cadeira.CadeiraUpdateDTO;
+import br.com.pet.conectaufc.exceptions.BussinessException;
+import br.com.pet.conectaufc.exceptions.InvalidFieldsException;
 import br.com.pet.conectaufc.model.cadeira.Cadeira;
 import br.com.pet.conectaufc.model.material.Material;
 import br.com.pet.conectaufc.model.professor.Professor;
@@ -45,8 +47,10 @@ class CadeiraServiceTest {
     @Test
     @DisplayName("Deve criar cadeira com sucesso")
     void criaCadeira(){
-        CadeiraRequestDTO dtoArgumento = new CadeiraRequestDTO("calculo");
-        CadeiraResponseDTO dtoResultado = new CadeiraResponseDTO(1L, "calculo");
+        CadeiraRequestDTO dtoArgumento = new CadeiraRequestDTO("calculo", "CAL101");
+
+        when(caderiaRepository.findByNome("calculo")).thenReturn(Optional.empty());
+        CadeiraResponseDTO dtoResultado = new CadeiraResponseDTO(1L, "calculo", "CAL101");
 
         assertThat(cadeiraService.criaCadeira(dtoArgumento).nome()).isEqualTo(dtoResultado.nome());
     }
@@ -55,12 +59,12 @@ class CadeiraServiceTest {
     @DisplayName("Nao cria cadeira por conta de nome já existente")
     void naoCriaCadeiraNomeRepetido(){
         String nomeRepetido = "calculo";
-        CadeiraRequestDTO dtoRef = new CadeiraRequestDTO(nomeRepetido);
+        CadeiraRequestDTO dtoRef = new CadeiraRequestDTO(nomeRepetido, "CAL101");
         Cadeira cadeiraRepetida = new Cadeira(dtoRef);
 
         when(caderiaRepository.findByNome(nomeRepetido)).thenReturn(Optional.of(cadeiraRepetida));
 
-        Assertions.assertThrows(IllegalArgumentException.class, () -> cadeiraService.criaCadeira(dtoRef));
+        Assertions.assertThrows(InvalidFieldsException.class, () -> cadeiraService.criaCadeira(dtoRef));
     }
 
     @Test
@@ -69,8 +73,8 @@ class CadeiraServiceTest {
         String nomeAtual = "nome";
         String nomeAtualizado = "emon";
 
-        Cadeira cadeira = new Cadeira(new CadeiraRequestDTO(nomeAtual));
-        CadeiraUpdateDTO dto = new CadeiraUpdateDTO(1l, nomeAtualizado);
+        Cadeira cadeira = new Cadeira(new CadeiraRequestDTO(nomeAtual, "COD101"));
+        CadeiraUpdateDTO dto = new CadeiraUpdateDTO(1l, nomeAtualizado, "COD101");
 
         when(caderiaRepository.getReferenceById(dto.id())).thenReturn(cadeira);
 
@@ -83,13 +87,13 @@ class CadeiraServiceTest {
         String nomeAtual = "nome";
         String nomeAtualizado = "emon";
 
-        Cadeira cadeira = new Cadeira(new CadeiraRequestDTO(nomeAtual));
-        CadeiraUpdateDTO dto = new CadeiraUpdateDTO(1l, nomeAtualizado);
+        Cadeira cadeira = new Cadeira(new CadeiraRequestDTO(nomeAtual, "COD101"));
+        CadeiraUpdateDTO dto = new CadeiraUpdateDTO(1l, nomeAtualizado, "COD101");
 
         when(caderiaRepository.getReferenceById(dto.id())).thenReturn(cadeira);
-        when(caderiaRepository.findByNome(nomeAtualizado)).thenReturn(Optional.of(new Cadeira(new CadeiraRequestDTO(nomeAtualizado))));
+        when(caderiaRepository.findByNome(nomeAtualizado)).thenReturn(Optional.of(new Cadeira(new CadeiraRequestDTO(nomeAtualizado, "COD202"))));
 
-        Assertions.assertThrows(IllegalArgumentException.class, () -> cadeiraService.atualizaNomeDaCadeira(dto));
+        Assertions.assertThrows(InvalidFieldsException.class, () -> cadeiraService.atualizaNomeDaCadeira(dto));
     }
 
     @Test
@@ -99,8 +103,8 @@ class CadeiraServiceTest {
         Cadeira cadeiraRef = new Cadeira();
         Professor professorRef = new Professor();
 
-        when(caderiaRepository.getReferenceById(dtoArgumento.idCadeira())).thenReturn(cadeiraRef);
-        when(professorRepository.getReferenceById(dtoArgumento.idProfessor())).thenReturn(professorRef);
+        when(caderiaRepository.findById(dtoArgumento.idCadeira())).thenReturn(Optional.of(cadeiraRef));
+        when(professorRepository.findById(dtoArgumento.idProfessor())).thenReturn(Optional.of(professorRef));
 
         assertThat(cadeiraService.adicionaProfessorAUmaCadeira(dtoArgumento).nomeProfessor()).isEqualTo(professorRef.getNome());
     }
@@ -112,12 +116,12 @@ class CadeiraServiceTest {
         Cadeira cadeiraRef = new Cadeira();
         Professor professorRef = new Professor();
 
-        when(caderiaRepository.getReferenceById(dtoArgumento.idCadeira())).thenReturn(cadeiraRef);
-        when(professorRepository.getReferenceById(dtoArgumento.idProfessor())).thenReturn(professorRef);
+        when(caderiaRepository.findById(dtoArgumento.idCadeira())).thenReturn(Optional.of(cadeiraRef));
+        when(professorRepository.findById(dtoArgumento.idProfessor())).thenReturn(Optional.of(professorRef));
 
         cadeiraRef.addProfessorNaCadeira(professorRef);
 
-        Assertions.assertThrows(IllegalArgumentException.class, () -> cadeiraService.adicionaProfessorAUmaCadeira(dtoArgumento));
+        Assertions.assertThrows(BussinessException.class, () -> cadeiraService.adicionaProfessorAUmaCadeira(dtoArgumento));
 
     }
 
@@ -147,7 +151,7 @@ class CadeiraServiceTest {
         when(professorRepository.getReferenceById(dtoArgumento.idProfessor())).thenReturn(professorRef);
 
 
-        Assertions.assertThrows(IllegalArgumentException.class, () -> cadeiraService.removeProfessorDaCadeira(dtoArgumento));
+        Assertions.assertThrows(BussinessException.class, () -> cadeiraService.removeProfessorDaCadeira(dtoArgumento));
 
     }
 
@@ -156,7 +160,7 @@ class CadeiraServiceTest {
     void apagaMaterialCadeiraExcluida(){
 
         Long id = 1L;
-        Cadeira cadeira = new Cadeira(new CadeiraRequestDTO("nome"));
+        Cadeira cadeira = new Cadeira(new CadeiraRequestDTO("nome", "COD101"));
 
         Professor professor = new Professor();
 

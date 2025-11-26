@@ -23,9 +23,9 @@ public class UsuarioService implements UserDetailsService {
     }
 
     @Transactional
-    public void salvaUsuario(String username, String password, UsuarioRole role){
+    public void salvaUsuario(String username, String password, String matricula,UsuarioRole role){
         String senhaEncriptada = new BCryptPasswordEncoder().encode(password);
 
-        usuarioRepository.save(new Usuario(username, senhaEncriptada, role));
+        usuarioRepository.save(new Usuario(username, senhaEncriptada, role, matricula));
     }
 }

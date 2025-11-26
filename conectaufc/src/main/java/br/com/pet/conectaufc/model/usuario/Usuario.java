@@ -18,6 +18,7 @@ public class Usuario implements UserDetails {
     private Long id;
     private String username;
     private String password;
+    private String matricula;
     @Enumerated(EnumType.STRING)
     private UsuarioRole role;
 
@@ -25,9 +26,10 @@ public class Usuario implements UserDetails {
 
     }
 
-    public Usuario(String username, String password, UsuarioRole role) {
+    public Usuario(String username, String password, UsuarioRole role, String matricula) {
         this.username = username;
         this.password = password;
+        this.matricula = matricula;
         this.role = role;
     }
 

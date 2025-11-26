@@ -47,7 +47,7 @@ public class UsuarioController {
             throw new RuntimeException("Já existe um usuario com esse username");
         }
 
-        usuarioService.salvaUsuario(dto.username(), dto.password(), dto.role());
+        usuarioService.salvaUsuario(dto.username(), dto.password(), dto.matricula(),dto.role());
         URI location = URI.create("/users/" + dto.username());
 
         return ResponseEntity.created(location).build();

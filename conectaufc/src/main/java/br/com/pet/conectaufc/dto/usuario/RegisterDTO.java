@@ -9,6 +9,8 @@ public record RegisterDTO(
         @NotBlank
         String password,
         @NotBlank
+        String matricula,
+        @NotBlank
         UsuarioRole role
 ) {
 }

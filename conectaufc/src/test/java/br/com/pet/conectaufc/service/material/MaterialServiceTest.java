@@ -4,6 +4,8 @@ import br.com.pet.conectaufc.dto.cadeira.CadeiraRequestDTO;
 import br.com.pet.conectaufc.dto.material.MaterialRequestDTO;
 import br.com.pet.conectaufc.dto.material.MaterialUpdateDTO;
 import br.com.pet.conectaufc.dto.professor.ProfessorRequestDTO;
+import br.com.pet.conectaufc.exceptions.BussinessException;
+import br.com.pet.conectaufc.exceptions.InvalidFieldsException;
 import br.com.pet.conectaufc.model.cadeira.Cadeira;
 import br.com.pet.conectaufc.model.material.Material;
 import br.com.pet.conectaufc.model.professor.Professor;
@@ -88,7 +90,7 @@ class MaterialServiceTest {
         Material material = new Material(dtoConstrutor, professor, cadeira);
         professor.addMaterialDeProfessor(material);
 
-        Assertions.assertThrows(IllegalArgumentException.class, () -> materialService.criaMaterial(dtoArgumento));
+        Assertions.assertThrows(BussinessException.class, () -> materialService.criaMaterial(dtoArgumento));
     }
 
     @Test
@@ -115,7 +117,7 @@ class MaterialServiceTest {
         Material material = new Material(dtoConstrutor, professor, cadeira);
         professor.addMaterialDeProfessor(material);
 
-        Assertions.assertThrows(IllegalArgumentException.class, () -> materialService.criaMaterial(dtoArgumento));
+        Assertions.assertThrows(BussinessException.class, () -> materialService.criaMaterial(dtoArgumento));
     }
 
     @Test
@@ -141,7 +143,7 @@ class MaterialServiceTest {
         Material material = new Material(dtoConstrutor, professor, cadeira);
         professor.addMaterialDeProfessor(material);
 
-        Assertions.assertThrows(IllegalArgumentException.class, () -> materialService.criaMaterial(dtoArgumento));
+        Assertions.assertThrows(BussinessException.class, () -> materialService.criaMaterial(dtoArgumento));
     }
 
     @Test
@@ -156,7 +158,7 @@ class MaterialServiceTest {
 
         MaterialUpdateDTO dtoArgumento = new MaterialUpdateDTO(idMaterial, nomeAtualizado, linkAtualizado);
 
-        when(materialRepository.getReferenceById(idMaterial)).thenReturn(materialRef);
+        when(materialRepository.findById(idMaterial)).thenReturn(Optional.of(materialRef));
         when(materialRepository.findByNome(dtoArgumento.nome())).thenReturn(Optional.empty());
         when(materialRepository.findByLink(dtoArgumento.link())).thenReturn(Optional.empty());
 
@@ -193,11 +195,11 @@ class MaterialServiceTest {
 
         MaterialUpdateDTO dtoArgumento = new MaterialUpdateDTO(idMaterial, nomeAtualizado, linkAtualizado);
 
-        when(materialRepository.getReferenceById(idMaterial)).thenReturn(materialRef);
+        when(materialRepository.findById(idMaterial)).thenReturn(Optional.of(materialRef));
         when(materialRepository.findByNome(dtoArgumento.nome())).thenReturn(Optional.empty());
         when(materialRepository.findByLink(dtoArgumento.link())).thenReturn(Optional.of(new Material()));
 
-        Assertions.assertThrows(IllegalArgumentException.class, () -> materialService.editaMaterial(dtoArgumento));
+        Assertions.assertThrows(InvalidFieldsException.class, () -> materialService.editaMaterial(dtoArgumento));
     }
 
     @Test
@@ -211,10 +213,10 @@ class MaterialServiceTest {
 
         MaterialUpdateDTO dtoArgumento = new MaterialUpdateDTO(idMaterial, nomeAtualizado, linkAtualizado);
 
-        when(materialRepository.getReferenceById(idMaterial)).thenReturn(materialRef);
+        when(materialRepository.findById(idMaterial)).thenReturn(Optional.of(materialRef));
         when(materialRepository.findByNome(dtoArgumento.nome())).thenReturn(Optional.of(new Material()));
         when(materialRepository.findByLink(dtoArgumento.link())).thenReturn(Optional.of(new Material()));
 
-        Assertions.assertThrows(IllegalArgumentException.class, () -> materialService.editaMaterial(dtoArgumento));
+        Assertions.assertThrows(InvalidFieldsException.class, () -> materialService.editaMaterial(dtoArgumento));
     }
 }

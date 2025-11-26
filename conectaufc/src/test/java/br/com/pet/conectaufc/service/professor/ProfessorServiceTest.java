@@ -2,6 +2,8 @@ package br.com.pet.conectaufc.service.professor;
 
 import br.com.pet.conectaufc.dto.professor.ProfessorRequestDTO;
 import br.com.pet.conectaufc.dto.professor.ProfessorUpdateDTO;
+import br.com.pet.conectaufc.exceptions.BussinessException;
+import br.com.pet.conectaufc.exceptions.InvalidFieldsException;
 import br.com.pet.conectaufc.model.professor.Professor;
 import br.com.pet.conectaufc.repository.professor.ProfessorRepository;
 import org.junit.jupiter.api.Assertions;
@@ -51,7 +53,7 @@ class ProfessorServiceTest {
 
         when(professorRepository.findByNome(nome)).thenReturn(Optional.of(professor));
 
-        Assertions.assertThrows(IllegalArgumentException.class, () -> professorService.criaProfessor(dtoArgumento));
+        Assertions.assertThrows(InvalidFieldsException.class, () -> professorService.criaProfessor(dtoArgumento));
     }
 
     @Test
@@ -66,7 +68,7 @@ class ProfessorServiceTest {
         ProfessorUpdateDTO dtoArgumento = new ProfessorUpdateDTO(id, nomeAtualizado);
         Professor professor = new Professor(new ProfessorRequestDTO(nome));
 
-        when(professorRepository.getReferenceById(id)).thenReturn(professor);
+        when(professorRepository.findById(id)).thenReturn(Optional.of(professor));
         when(professorRepository.findByNome(nomeAtualizado)).thenReturn(Optional.empty());
 
         assertThat(professorService.atualizaNomeDoProfessor(dtoArgumento).nome()).isEqualTo(nomeAtualizado);
@@ -83,10 +85,10 @@ class ProfessorServiceTest {
         ProfessorUpdateDTO dtoArgumento = new ProfessorUpdateDTO(id, nomeAtualizado);
         Professor professor = new Professor(new ProfessorRequestDTO(nome));
 
-        when(professorRepository.getReferenceById(id)).thenReturn(professor);
+        when(professorRepository.findById(id)).thenReturn(Optional.of(professor));
         when(professorRepository.findByNome(nomeAtualizado)).thenReturn(Optional.of(new Professor()));
 
-        Assertions.assertThrows(IllegalArgumentException.class, () -> professorService.atualizaNomeDoProfessor(dtoArgumento));
+        Assertions.assertThrows(BussinessException.class, () -> professorService.atualizaNomeDoProfessor(dtoArgumento));
 
     }
 

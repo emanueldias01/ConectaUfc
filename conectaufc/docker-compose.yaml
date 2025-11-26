@@ -15,20 +15,7 @@ services:
       - postgres_data:/var/lib/postgresql/data
     restart: always
 
-  app:
-    container_name: conecta_ufc_app
-    build :
-      context: .
-      target: prod
-    ports:
-      - 8080:8080
-    depends_on:
-      - db
-    environment:
-      - DATABASE_URL=jdbc:postgresql://postgres:5432/conecta_ufc
-      - DB_USER=root
-      - DB_PASSWORD=root
-    restart: always
+
 
 volumes:
   postgres_data:

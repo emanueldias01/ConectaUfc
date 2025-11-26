@@ -17,7 +17,11 @@ public class Cadeira {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(unique = true, nullable = false)
     private String nome;
+
+    @Column(unique = true, nullable = false)
+    private String codigo;
 
     @ManyToMany(mappedBy = "cadeiras")
     private List<Professor> professores = new ArrayList<>();
@@ -60,6 +64,10 @@ public class Cadeira {
 
     public void setNome(String nome) {
         this.nome = nome;
+    }
+
+    public String getCodigo() {
+        return codigo;
     }
 
     public void addProfessorNaCadeira(Professor professor){
