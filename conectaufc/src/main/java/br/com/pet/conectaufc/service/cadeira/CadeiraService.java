@@ -1,6 +1,9 @@
 package br.com.pet.conectaufc.service.cadeira;
 
 import br.com.pet.conectaufc.dto.cadeira.*;
+import br.com.pet.conectaufc.exceptions.BussinessException;
+import br.com.pet.conectaufc.exceptions.EntityNotFoundException;
+import br.com.pet.conectaufc.exceptions.InvalidFieldsException;
 import br.com.pet.conectaufc.model.cadeira.Cadeira;
 import br.com.pet.conectaufc.model.professor.Professor;
 import br.com.pet.conectaufc.repository.cadeira.CadeiraRepository;
@@ -28,13 +31,11 @@ public class CadeiraService {
     public CadeiraResponseDTO criaCadeira(CadeiraRequestDTO dto){
 
         if(cadeiraRepository.findByNome(dto.nome()).isPresent()){
-            throw new IllegalArgumentException("Cadeira já existe");
+            throw new InvalidFieldsException("Cadeira já existe");
         }
 
         Cadeira cadeira = new Cadeira(dto);
-
         cadeiraRepository.save(cadeira);
-
         return new CadeiraResponseDTO(cadeira);
     }
 
@@ -50,15 +51,12 @@ public class CadeiraService {
     public CadeiraResponseDTO atualizaNomeDaCadeira(CadeiraUpdateDTO dto){
 
         if (cadeiraRepository.findByNome(dto.nome()).isPresent()){
-            throw new IllegalArgumentException("Já existe uma cadeira com o nome que está tentando atualizar");
+            throw new InvalidFieldsException("Já existe uma cadeira com o nome que está tentando atualizar");
         }
 
         Cadeira cadeira = cadeiraRepository.getReferenceById(dto.id());
-
         cadeira.setNome(dto.nome());
-
         cadeiraRepository.save(cadeira);
-
         return new CadeiraResponseDTO(cadeira);
     }
 
@@ -69,29 +67,23 @@ public class CadeiraService {
         }
 
         professorRepository.removeVinculoDeProfessorComCadeira(id);
-
         cadeiraRepository.deleteById(id);
     }
 
     @Transactional
     public CadeiraProfessorResponseDTO adicionaProfessorAUmaCadeira(CadeiraProfessorRequestDTO dto){
         Cadeira cadeira = cadeiraRepository.findById(dto.idCadeira())
-                .orElseThrow(() -> new IllegalArgumentException("Cadeira nao encontrada"));
+                .orElseThrow(() -> new EntityNotFoundException("Cadeira nao encontrada"));
         Professor professor = professorRepository.findById(dto.idProfessor())
-                .orElseThrow(() -> new IllegalArgumentException("Professor nao encontrado"));
+                .orElseThrow(() -> new EntityNotFoundException("Professor nao encontrado"));
 
         if(cadeira.getProfessores().contains(professor)){
-            throw new IllegalArgumentException("Esse professor já está cadastrado na cadeira");
+            throw new BussinessException("Esse professor já está cadastrado na cadeira");
         }
 
         cadeira.addProfessorNaCadeira(professor);
-
-        System.out.println("aaaaa");
         professorRepository.salvaProfessorNaquelaCadeira(dto.idProfessor(), dto.idCadeira());
-
-        System.out.println("bbbbb");
         cadeiraRepository.save(cadeira);
-
         return new CadeiraProfessorResponseDTO(dto.idCadeira(), cadeira.getNome(), professor.getNome());
     }
 
@@ -101,14 +93,12 @@ public class CadeiraService {
         Professor professor = professorRepository.getReferenceById(dto.idProfessor());
 
         if(!cadeira.getProfessores().contains(professor)){
-            throw new IllegalArgumentException("Esse professor nao esta na cadeira");
+            throw new BussinessException("Esse professor nao esta na cadeira");
         }
 
         cadeira.removeProfessorDaCadeira(professor);
         materialRepository.removeMaterialDoProfessorReferenteACadeira(professor.getId(), cadeira.getId());
-
         cadeiraRepository.save(cadeira);
-
         return new CadeiraProfessorResponseDTO(dto.idCadeira(), cadeira.getNome(), professor.getNome());
     }
 }

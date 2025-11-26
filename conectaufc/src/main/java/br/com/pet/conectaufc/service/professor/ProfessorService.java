@@ -3,6 +3,9 @@ package br.com.pet.conectaufc.service.professor;
 import br.com.pet.conectaufc.dto.professor.ProfessorRequestDTO;
 import br.com.pet.conectaufc.dto.professor.ProfessorResponseDTO;
 import br.com.pet.conectaufc.dto.professor.ProfessorUpdateDTO;
+import br.com.pet.conectaufc.exceptions.BussinessException;
+import br.com.pet.conectaufc.exceptions.EntityNotFoundException;
+import br.com.pet.conectaufc.exceptions.InvalidFieldsException;
 import br.com.pet.conectaufc.model.professor.Professor;
 import br.com.pet.conectaufc.repository.material.MaterialRepository;
 import br.com.pet.conectaufc.repository.professor.ProfessorRepository;
@@ -26,7 +29,7 @@ public class ProfessorService {
     public ProfessorResponseDTO criaProfessor(ProfessorRequestDTO dto){
 
         if(professorRepository.findByNome(dto.nome()).isPresent()){
-            throw new IllegalArgumentException("Ja existe um professor registrado com esse nome");
+            throw new InvalidFieldsException("Ja existe um professor registrado com esse nome");
         }
 
         Professor professor = new Professor(dto);
@@ -56,10 +59,11 @@ public class ProfessorService {
 
     @Transactional
     public ProfessorResponseDTO atualizaNomeDoProfessor(ProfessorUpdateDTO dto){
-        Professor professor = professorRepository.getReferenceById(dto.id());
+        Professor professor = professorRepository.findById(dto.id())
+                .orElseThrow(() -> new EntityNotFoundException("Professor com o id especificado não foi encontrado"));
 
         if(professorRepository.findByNome(dto.nome()).isPresent()){
-            throw new IllegalArgumentException("Já existe um professor com o nome em que deseja atualizar");
+            throw new BussinessException("Já existe um professor com o nome em que deseja atualizar");
         }
 
         professor.setNome(dto.nome());
