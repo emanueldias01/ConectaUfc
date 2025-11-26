@@ -177,11 +177,11 @@ class MaterialServiceTest {
 
         MaterialUpdateDTO dtoArgumento = new MaterialUpdateDTO(idMaterial, nomeAtualizado, linkAtualizado);
 
-        when(materialRepository.getReferenceById(idMaterial)).thenReturn(materialRef);
+        when(materialRepository.findById(idMaterial)).thenReturn(Optional.of(materialRef));
         when(materialRepository.findByNome(dtoArgumento.nome())).thenReturn(Optional.of(new Material()));
         when(materialRepository.findByLink(dtoArgumento.link())).thenReturn(Optional.empty());
 
-        Assertions.assertThrows(IllegalArgumentException.class, () -> materialService.editaMaterial(dtoArgumento));
+        Assertions.assertThrows(InvalidFieldsException.class, () -> materialService.editaMaterial(dtoArgumento));
     }
 
     @Test
