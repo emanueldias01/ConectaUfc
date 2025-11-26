@@ -44,7 +44,8 @@ public class CadeiraService {
     }
 
     public CadeiraResponseDTO buscaCadeiraPeloId(Long id){
-        return new CadeiraResponseDTO(cadeiraRepository.getReferenceById(id));
+        return new CadeiraResponseDTO(cadeiraRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Cadeira nao encontrada")));
     }
 
     @Transactional

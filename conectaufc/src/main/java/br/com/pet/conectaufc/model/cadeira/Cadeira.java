@@ -35,6 +35,7 @@ public class Cadeira {
 
     public Cadeira(CadeiraRequestDTO dto) {
         this.nome = dto.nome();
+        this.codigo = dto.codigo();
     }
 
     public Cadeira(Long idCadeira, String nome) {

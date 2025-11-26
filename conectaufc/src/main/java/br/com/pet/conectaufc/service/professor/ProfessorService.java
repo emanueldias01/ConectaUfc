@@ -40,7 +40,8 @@ public class ProfessorService {
     }
 
     public ProfessorResponseDTO buscaProfessorPorId(Long id){
-        return new ProfessorResponseDTO(professorRepository.getReferenceById(id));
+        return new ProfessorResponseDTO(professorRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Professor com o id especificado não foi encontrado")));
     }
 
     public Page<ProfessorResponseDTO> listaTodosOsProfessores(Pageable pageable){

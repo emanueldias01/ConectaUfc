@@ -25,8 +25,8 @@ services:
     depends_on:
       - db
     environment:
-      - DATABASE_URL=jdbc:postgresql://postgres:5432/conecta_ufc
-      - DB_USER=root
+      - URL_DATABASE=jdbc:postgresql://postgres:5432/conecta_ufc
+      - DB_USERNAME=root
       - DB_PASSWORD=root
     restart: always
 

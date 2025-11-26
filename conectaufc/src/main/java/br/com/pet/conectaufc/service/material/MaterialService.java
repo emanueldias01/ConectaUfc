@@ -51,7 +51,8 @@ public class MaterialService {
     }
 
     public MaterialResponseDTO buscaMaterialPorId(Long id){
-        return new MaterialResponseDTO(materialRepository.getReferenceById(id));
+        return new MaterialResponseDTO(materialRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Material nao encontrado")));
     }
 
     public Page<MaterialResponseDTO> listaTodosOsMateriaisDeCertaCadeiraEDeCertoProfessor(Long idCadeira, Long idProfessor, Pageable pageable){
