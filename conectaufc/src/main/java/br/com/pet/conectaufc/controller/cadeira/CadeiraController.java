@@ -3,21 +3,24 @@ package br.com.pet.conectaufc.controller.cadeira;
 import br.com.pet.conectaufc.dto.cadeira.*;
 import br.com.pet.conectaufc.service.cadeira.CadeiraService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.util.UriComponentsBuilder;
+
+import java.net.URI;
 
 @RestController
-@RequestMapping("/cadeira")
+@RequestMapping("/cadeiras")
+@SecurityRequirement(name = "bearerAuth")
 public class CadeiraController {
 
     @Autowired
     CadeiraService cadeiraService;
 
-    @GetMapping("/all")
+    @GetMapping("/")
     @Operation(description = "lista todas as cadeiras em ordem alfabetica")
     public ResponseEntity<Page<CadeiraResponseDTO>> buscaTodasAsCadeiras(@RequestParam(defaultValue = "0") int page,
                                                                          @RequestParam(defaultValue = "10") int size){
@@ -30,22 +33,23 @@ public class CadeiraController {
         return ResponseEntity.ok(cadeiraService.buscaCadeiraPeloId(id));
     }
 
-    @PostMapping("/create")
+    @PostMapping("/")
     @Operation(description = "cria cadeira")
-    public ResponseEntity<CadeiraResponseDTO> criaCadeira(@RequestBody CadeiraRequestDTO dto, UriComponentsBuilder uriComponentsBuilder){
+    public ResponseEntity<CadeiraResponseDTO> criaCadeira(@RequestBody CadeiraRequestDTO dto){
         CadeiraResponseDTO cadeira = cadeiraService.criaCadeira(dto);
-        var uri = uriComponentsBuilder.path("{id}").buildAndExpand(cadeira.id()).toUri();
 
-        return ResponseEntity.created(uri).body(cadeira);
+        URI location = URI.create("/users/" + dto.nome());
+
+        return ResponseEntity.created(location).body(cadeira);
     }
 
-    @PutMapping("/update")
+    @PutMapping("/")
     @Operation(description = "atualiza nome da cadeira")
     public ResponseEntity<CadeiraResponseDTO> atualizaCadeira(@RequestBody CadeiraUpdateDTO dto){
         return ResponseEntity.ok(cadeiraService.atualizaNomeDaCadeira(dto));
     }
 
-    @PutMapping("/addProfessor")
+    @PostMapping("/professor")
     @Operation(description = "adiciona professor existente a cadeira")
     public ResponseEntity<CadeiraProfessorResponseDTO> adicionaProfessorAUmaCadeira(@RequestBody CadeiraProfessorRequestDTO dto){
         return ResponseEntity.ok(cadeiraService.adicionaProfessorAUmaCadeira(dto));
@@ -57,9 +61,9 @@ public class CadeiraController {
         return ResponseEntity.ok(cadeiraService.removeProfessorDaCadeira(dto));
     }
 
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/{id}")
     @Operation(description = "deleta cadeira e todo seu material")
-    public ResponseEntity deletaCadeira(@PathVariable Long id){
+    public ResponseEntity<Void> deletaCadeira(@PathVariable Long id){
         cadeiraService.deletaCadeira(id);
         return ResponseEntity.noContent().build();
     }

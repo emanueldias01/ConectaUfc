@@ -5,21 +5,24 @@ import br.com.pet.conectaufc.dto.material.MaterialResponseDTO;
 import br.com.pet.conectaufc.dto.material.MaterialUpdateDTO;
 import br.com.pet.conectaufc.service.material.MaterialService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.util.UriComponentsBuilder;
+
+import java.net.URI;
 
 @RestController
-@RequestMapping("/material")
+@RequestMapping("/materiais")
+@SecurityRequirement(name = "bearerAuth")
 public class MaterialController {
 
     @Autowired
     MaterialService materialService;
 
-    @GetMapping("/all")
+    @GetMapping("/")
     @Operation(description = "busca todos os materiais")
     public ResponseEntity<Page<MaterialResponseDTO>> buscaTodosOsMateriais(@RequestParam(defaultValue = "0") int page,
                                                                            @RequestParam(defaultValue = "10") int size){
@@ -41,22 +44,23 @@ public class MaterialController {
         return ResponseEntity.ok(materialService.buscaMaterialPorId(id));
     }
 
-    @PostMapping("/create")
+    @PostMapping("/")
     @Operation(description = "cria material de um professor e cadeira existente")
-    public ResponseEntity<MaterialResponseDTO> criaMaterial(@RequestBody MaterialRequestDTO dto, UriComponentsBuilder uriComponentsBuilder){
+    public ResponseEntity<MaterialResponseDTO> criaMaterial(@RequestBody MaterialRequestDTO dto){
         MaterialResponseDTO material = materialService.criaMaterial(dto);
-        var uri = uriComponentsBuilder.path("{id}").buildAndExpand(material.id()).toUri();
 
-        return ResponseEntity.created(uri).body(material);
+        URI location = URI.create("/materiais/" + dto.nome());
+
+        return ResponseEntity.created(location).body(material);
     }
 
-    @PutMapping("/update")
+    @PutMapping("/")
     @Operation(description = "edita um material")
     public ResponseEntity<MaterialResponseDTO> editaMaterial(@RequestBody MaterialUpdateDTO dto){
         return ResponseEntity.ok(materialService.editaMaterial(dto));
     }
 
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/{id}")
     @Operation(description = "deleta um material")
     public ResponseEntity deletaMaterial(@RequestParam Long id){
         materialService.deletaMaterial(id);

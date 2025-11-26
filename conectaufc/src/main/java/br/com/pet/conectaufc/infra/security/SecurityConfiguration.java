@@ -29,8 +29,10 @@ public class SecurityConfiguration {
                 .addFilterBefore(filterToken, UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests(
                 auth -> {
-                    auth.requestMatchers("/login").permitAll();
-                    auth.requestMatchers("/register").permitAll();
+                    auth.requestMatchers( "/swagger-ui/**").permitAll();
+                    auth.requestMatchers( "/v3/api-docs/**").permitAll();
+                    auth.requestMatchers("/auth/login").permitAll();
+                    auth.requestMatchers("/auth/register").permitAll();
                     auth.requestMatchers(HttpMethod.POST,"/cadeira/**").hasRole("MONITOR");
                     auth.requestMatchers(HttpMethod.POST, "/professor/**").hasRole("MONITOR");
                     auth.requestMatchers(HttpMethod.POST, "/material/**").hasRole("MONITOR");

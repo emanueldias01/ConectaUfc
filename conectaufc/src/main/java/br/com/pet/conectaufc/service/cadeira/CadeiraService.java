@@ -75,16 +75,21 @@ public class CadeiraService {
 
     @Transactional
     public CadeiraProfessorResponseDTO adicionaProfessorAUmaCadeira(CadeiraProfessorRequestDTO dto){
-        Cadeira cadeira = cadeiraRepository.getReferenceById(dto.idCadeira());
-        Professor professor = professorRepository.getReferenceById(dto.idProfessor());
+        Cadeira cadeira = cadeiraRepository.findById(dto.idCadeira())
+                .orElseThrow(() -> new IllegalArgumentException("Cadeira nao encontrada"));
+        Professor professor = professorRepository.findById(dto.idProfessor())
+                .orElseThrow(() -> new IllegalArgumentException("Professor nao encontrado"));
 
         if(cadeira.getProfessores().contains(professor)){
             throw new IllegalArgumentException("Esse professor já está cadastrado na cadeira");
         }
 
         cadeira.addProfessorNaCadeira(professor);
+
+        System.out.println("aaaaa");
         professorRepository.salvaProfessorNaquelaCadeira(dto.idProfessor(), dto.idCadeira());
 
+        System.out.println("bbbbb");
         cadeiraRepository.save(cadeira);
 
         return new CadeiraProfessorResponseDTO(dto.idCadeira(), cadeira.getNome(), professor.getNome());

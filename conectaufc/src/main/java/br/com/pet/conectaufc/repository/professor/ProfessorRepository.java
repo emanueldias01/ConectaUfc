@@ -18,11 +18,11 @@ public interface ProfessorRepository extends JpaRepository<Professor, Long> {
     @Query(value = "SELECT professor_id FROM professor_cadeira WHERE cadeira_id=:idCadeira", nativeQuery = true)
     Page<Long> buscaProfessoresDeCadeiraEspecifica(@Param("idCadeira") Long idCadeira, Pageable pageable);
 
+    @Modifying
     @Query(value = "INSERT INTO professor_cadeira(professor_id, cadeira_id) VALUES (:idProfessor, :idCadeira)", nativeQuery = true)
     void salvaProfessorNaquelaCadeira(@Param("idProfessor") Long idProfessor, @Param("idCadeira") Long idCadeira);
 
     @Modifying
-    @Transactional
     @Query(value = "DELETE FROM professor_cadeira WHERE cadeira_id =:id", nativeQuery = true)
     void removeVinculoDeProfessorComCadeira(@Param("id") Long id);
 }
